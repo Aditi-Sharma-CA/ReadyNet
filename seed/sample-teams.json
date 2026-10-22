@@ -1,0 +1,41 @@
+{
+  "_note": "SAMPLE teams for demo mode. In real use, the leader at each cache creates teams on the day (minimum 3 people).",
+  "teams": [
+    {
+      "name": "Team 1",
+      "members": [
+        "Maria",
+        "Kevin",
+        "Priya"
+      ],
+      "cache": "Zone 6 cache"
+    },
+    {
+      "name": "Team 2",
+      "members": [
+        "Dev",
+        "Lena",
+        "Tom"
+      ],
+      "cache": "Zone 6 cache"
+    },
+    {
+      "name": "Team 3",
+      "members": [
+        "Rosa",
+        "Jin",
+        "Omar"
+      ],
+      "cache": "Zone 6 cache"
+    },
+    {
+      "name": "Team 4",
+      "members": [
+        "Ali",
+        "Mei",
+        "Sam"
+      ],
+      "cache": "Zone 3 cache"
+    }
+  ]
+}

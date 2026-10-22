@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ReadyNet public check-in</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#1F4E79}a:hover{color:#12355A}
+button{font-family:inherit;cursor:pointer}
+input{font-family:inherit}
+</style>
+</helmet>
+<sc-if value="{{isPublic}}" hint-placeholder-val="{{ true }}">
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #F4F6F8; color: #12212E; font-family: 'Atkinson Hyperlegible', 'Segoe UI', sans-serif; overflow: hidden">
+
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 20px 20px 12px; background: #12212E; color: #FFFFFF">
+<sc-if value="{{showBack}}" hint-placeholder-val="{{ false }}">
+<button onClick="{{back}}" aria-label="Back" style="width: 44px; height: 44px; border: 0; border-radius: 22px; background: #22384A; color: #FFFFFF; display: flex; align-items: center; justify-content: center">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+</button>
+</sc-if>
+<sc-if value="{{hideBack}}" hint-placeholder-val="{{ true }}">
+<div style="width: 44px; height: 44px"></div>
+</sc-if>
+<div style="display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 18px; letter-spacing: 0.3px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F08C2E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l9 5v6c0 5-4 8-9 9-5-1-9-4-9-9V7z"/><path d="M12 8v8M8 12h8"/></svg>
+ReadyNet
+</div>
+<div style="width: 44px; height: 44px"></div>
+</div>
+
+<sc-if value="{{inQuestions}}" hint-placeholder-val="{{ false }}">
+<div style="height: 6px; background: #D5DDE4">
+<div style="{{progressStyle}}"></div>
+</div>
+</sc-if>
+
+<div style="flex: 1 1 auto; overflow-y: auto; padding: 24px 20px 28px; display: flex; flex-direction: column; gap: 16px">
+
+<sc-if value="{{isAlert}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="background: #B3261E; color: #FFFFFF; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 8px">
+<div style="font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase">Emergency alert</div>
+<div style="font-size: 26px; font-weight: 700; line-height: 1.2">Earthquake reported in Milpitas</div>
+<div style="font-size: 16px; line-height: 1.4">Check in so CERT volunteers and first responders know where help is needed most.</div>
+</div>
+<div style="background: #FFFFFF; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 10px; border: 1px solid #D5DDE4">
+<div style="font-weight: 700; font-size: 16px">Takes about 1 minute</div>
+<div style="font-size: 15px; line-height: 1.5; color: #3B4C5A">Share your location, how many people are with you, and answer questions about injuries and your surroundings. You can also check in for someone else.</div>
+</div>
+<button onClick="{{next}}" style="height: 60px; border: 0; border-radius: 14px; background: #D9480F; color: #FFFFFF; font-size: 19px; font-weight: 700">Check in now</button>
+<div style="font-size: 13px; color: #4A5A68; text-align: center">This app does not replace 911. Keep trying 911 for life-threatening emergencies.</div>
+<div style="border-top: 1px solid #D5DDE4; margin-top: 8px; padding-top: 18px; display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 15px; color: #3B4C5A">CERT member or first responder?</div>
+<button onClick="{{openResponder}}" style="height: 52px; border: 2px solid #12212E; border-radius: 14px; background: #FFFFFF; color: #12212E; font-size: 17px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+Open the responder view
+</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isLocation}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="font-size: 13px; font-weight: 700; color: #4A5A68; letter-spacing: 1px; text-transform: uppercase">Location</div>
+<div style="font-size: 26px; font-weight: 700; line-height: 1.2">Where is help needed?</div>
+<div style="background: #FFFFFF; border: 1px solid #D5DDE4; border-radius: 14px; padding: 14px; display: flex; align-items: center; gap: 10px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1F4E79" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6 7-12a7 7 0 10-14 0c0 6 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>
+<div style="font-size: 15px">GPS location found · Zone 6</div>
+</div>
+<label for="addr" style="font-size: 15px; font-weight: 700">Street address or landmark</label>
+<input id="addr" value="{{address}}" onChange="{{setAddress}}" style="height: 52px; border: 1px solid #9AA8B4; border-radius: 12px; padding: 0 14px; font-size: 17px; background: #FFFFFF; color: #12212E">
+<div style="font-size: 14px; color: #4A5A68; line-height: 1.4">Add a house or apartment number so teams can find the right door. Checking in for someone else? Enter where they are.</div>
+<button onClick="{{next}}" style="height: 56px; border: 0; border-radius: 14px; background: #12212E; color: #FFFFFF; font-size: 18px; font-weight: 700">Continue</button>
+</div>
+</sc-if>
+
+<sc-if value="{{isQuestion}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div style="font-size: 13px; font-weight: 700; color: #4A5A68; letter-spacing: 1px; text-transform: uppercase">{{q.section}} · {{q.counter}}</div>
+<div style="font-size: 26px; font-weight: 700; line-height: 1.25">{{q.text}}</div>
+<sc-if value="{{q.hasHint}}" hint-placeholder-val="{{ false }}">
+<div style="font-size: 15px; color: #3B4C5A; line-height: 1.4">{{q.hint}}</div>
+</sc-if>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 6px">
+<sc-for list="{{q.options}}" as="opt" hint-placeholder-count="3">
+<button onClick="{{opt.pick}}" style="{{opt.style}}">{{opt.label}}</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isCount}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div style="font-size: 13px; font-weight: 700; color: #4A5A68; letter-spacing: 1px; text-transform: uppercase">{{cnt.section}} · {{cnt.counter}}</div>
+<div style="font-size: 26px; font-weight: 700; line-height: 1.25">{{cnt.text}}</div>
+<div style="font-size: 15px; color: #3B4C5A; line-height: 1.4">{{cnt.hint}}</div>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #FFFFFF; border: 1px solid #D5DDE4; border-radius: 18px; padding: 16px; margin-top: 6px">
+<button onClick="{{cnt.minus}}" aria-label="Fewer" style="width: 72px; height: 72px; border: 2px solid #12212E; border-radius: 36px; background: #FFFFFF; color: #12212E; display: flex; align-items: center; justify-content: center">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"/></svg>
+</button>
+<div aria-live="polite" style="font-size: 56px; font-weight: 700; min-width: 90px; text-align: center">{{cnt.value}}</div>
+<button onClick="{{cnt.plus}}" aria-label="More" style="width: 72px; height: 72px; border: 0; border-radius: 36px; background: #12212E; color: #FFFFFF; display: flex; align-items: center; justify-content: center">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+</button>
+</div>
+<button onClick="{{next}}" style="height: 56px; border: 0; border-radius: 14px; background: #12212E; color: #FFFFFF; font-size: 18px; font-weight: 700; margin-top: 6px">Continue</button>
+</div>
+</sc-if>
+
+<sc-if value="{{isResult}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div style="background: #DDEFE0; color: #1B5E20; border-radius: 14px; padding: 12px 14px; display: flex; gap: 10px; align-items: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>
+<div style="font-size: 15px; font-weight: 700">Check-in sent to CERT and first responders · {{peopleLine}}</div>
+</div>
+<sc-if value="{{trapped}}" hint-placeholder-val="{{ false }}">
+<div style="background: #B3261E; color: #FFFFFF; border-radius: 14px; padding: 14px 16px; font-size: 15px; font-weight: 700; line-height: 1.4">Rescue alert sent for {{trappedLine}}. First responders have the location.</div>
+</sc-if>
+<div style="{{result.cardStyle}}">
+<div style="font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase">{{statusLabel}}</div>
+<div style="font-size: 34px; font-weight: 700">{{result.name}}</div>
+<div style="font-size: 17px; line-height: 1.4">{{result.meaning}}</div>
+</div>
+<div style="{{riskStyle}}">
+<div style="font-size: 12px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase">Area</div>
+<div style="font-size: 17px; font-weight: 700">{{riskLabel}}</div>
+</div>
+
+<sc-if value="{{hasGuides}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="font-size: 21px; font-weight: 700; margin-top: 6px">What you can do right now</div>
+<div style="font-size: 15px; color: #3B4C5A; line-height: 1.45">{{guideIntro}}</div>
+<sc-for list="{{guides}}" as="g" hint-placeholder-count="2">
+<div style="{{g.cardStyle}}">
+<div style="display: flex; align-items: center; gap: 10px">
+<div style="{{g.badgeStyle}}">{{g.tag}}</div>
+<div style="font-size: 19px; font-weight: 700">{{g.title}}</div>
+</div>
+<sc-if value="{{g.hasWhen}}" hint-placeholder-val="{{ false }}">
+<div style="font-size: 14px; color: #3B4C5A; line-height: 1.4">{{g.when}}</div>
+</sc-if>
+<sc-for list="{{g.steps}}" as="step" hint-placeholder-count="3">
+<div style="display: flex; gap: 12px; align-items: flex-start">
+<div style="flex: 0 0 30px; height: 30px; border-radius: 15px; background: #12212E; color: #FFFFFF; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{step.n}}</div>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<div style="font-size: 16px; font-weight: 700">{{step.title}}</div>
+<div style="font-size: 15px; line-height: 1.45; color: #3B4C5A">{{step.body}}</div>
+</div>
+</div>
+</sc-for>
+<sc-if value="{{g.hasCaution}}" hint-placeholder-val="{{ false }}">
+<div style="background: #FBE3D6; color: #6E2406; border-radius: 10px; padding: 10px 12px; font-size: 14px; line-height: 1.4; font-weight: 700">{{g.caution}}</div>
+</sc-if>
+</div>
+</sc-for>
+<div style="font-size: 13px; color: #4A5A68; line-height: 1.4">These steps don't replace medical care. If someone gets worse, check in again.</div>
+</div>
+</sc-if>
+
+<button onClick="{{next}}" style="height: 56px; border: 0; border-radius: 14px; background: #12212E; color: #FFFFFF; font-size: 18px; font-weight: 700">Continue</button>
+</div>
+</sc-if>
+
+<sc-if value="{{isPhotos}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="font-size: 13px; font-weight: 700; color: #4A5A68; letter-spacing: 1px; text-transform: uppercase">Last step · Optional</div>
+<div style="font-size: 26px; font-weight: 700; line-height: 1.25">Add photos for responders</div>
+<div style="font-size: 15px; color: #3B4C5A; line-height: 1.45">Your check-in is already sent. Photos of damage, blocked roads or a trapped person help teams prepare before they arrive. Only CERT and first responders can see them.</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<sc-for list="{{photoTiles}}" as="tile" hint-placeholder-count="0">
+<div style="height: 110px; border-radius: 12px; background: #C9D4DD; display: flex; align-items: center; justify-content: center; color: #22384A; font-size: 14px; font-weight: 700">Photo {{tile.n}}</div>
+</sc-for>
+<button onClick="{{addPhoto}}" style="height: 110px; border: 2px dashed #6B7C8A; border-radius: 12px; background: #FFFFFF; color: #12212E; font-size: 15px; font-weight: 700; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+Take photo
+</button>
+</div>
+<button onClick="{{next}}" style="height: 56px; border: 0; border-radius: 14px; background: #12212E; color: #FFFFFF; font-size: 18px; font-weight: 700">{{photoCta}}</button>
+</div>
+</sc-if>
+
+<sc-if value="{{isDone}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="width: 64px; height: 64px; border-radius: 32px; background: #2E7D32; color: #FFFFFF; display: flex; align-items: center; justify-content: center">
+<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>
+</div>
+<div style="font-size: 28px; font-weight: 700; line-height: 1.2">Check-in complete</div>
+<div style="font-size: 15px; color: #3B4C5A; line-height: 1.45">Your check-in is on the CERT and first-responder list for Zone 6. Check in again if anything changes.</div>
+<div style="background: #FFFFFF; border: 1px solid #D5DDE4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; gap: 10px"><div style="font-size: 15px; color: #4A5A68">Checked in for</div><div style="font-size: 15px; font-weight: 700">{{forLabel}}</div></div>
+<div style="display: flex; justify-content: space-between; gap: 10px"><div style="font-size: 15px; color: #4A5A68">Status</div><div style="font-size: 15px; font-weight: 700">{{result.name}}</div></div>
+<div style="display: flex; justify-content: space-between; gap: 10px"><div style="font-size: 15px; color: #4A5A68">People</div><div style="font-size: 15px; font-weight: 700; text-align: right">{{peopleLine}}</div></div>
+<div style="display: flex; justify-content: space-between; gap: 10px"><div style="font-size: 15px; color: #4A5A68">Area</div><div style="font-size: 15px; font-weight: 700">{{riskLabel}}</div></div>
+<div style="display: flex; justify-content: space-between; gap: 10px"><div style="font-size: 15px; color: #4A5A68">Photos</div><div style="font-size: 15px; font-weight: 700">{{photoDone}}</div></div>
+</div>
+<sc-if value="{{hasGuides}}" hint-placeholder-val="{{ false }}">
+<button onClick="{{showGuides}}" style="height: 52px; border: 2px solid #12212E; border-radius: 14px; background: #FFFFFF; color: #12212E; font-size: 17px; font-weight: 700">See first-aid steps again</button>
+</sc-if>
+<button onClick="{{restart}}" style="height: 52px; border: 1px solid #9AA8B4; border-radius: 14px; background: #FFFFFF; color: #12212E; font-size: 17px; font-weight: 700">Check in again</button>
+</div>
+</sc-if>
+
+</div>
+</div>
+</sc-if>
+<sc-if value="{{isResponder}}" hint-placeholder-val="{{ false }}">
+<dc-import name="Responder" on-exit="{{closeResponder}}" hint-size="390px,844px"></dc-import>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+var WHO = { id: 'who', section: 'Who', text: 'Who are you checking in for?', hint: 'You can check in for a neighbor, family member or anyone near you without a phone.', options: [['Myself', 0], ['Someone else', 0]] };
+var COND = [
+  { id: 'injured', section: 'Injuries', text: 'Are you injured?', textOther: 'Are they injured?', hint: 'If several people are hurt, answer for the most seriously hurt.', options: [['Seriously', 3], ['Yes, but it can wait', 2], ['Minor injury', 1], ['No', 0]] },
+  { id: 'walk', section: 'Injuries', text: 'Can you walk on your own?', textOther: 'Can they walk on their own?', options: [['Yes', 0], ['No', 2]] },
+  { id: 'breath', section: 'Injuries', text: 'Any trouble breathing, chest pain or heavy bleeding?', options: [['Trouble breathing or chest pain', 3], ['Heavy bleeding', 0], ['No', 0]] },
+  { id: 'water', section: 'Injuries', text: 'Do you have safe water and food for the next 24 hours?', textOther: 'Do they have safe water and food for the next 24 hours?', options: [['Yes', 0], ['No', 0]] },
+  { id: 'meds', section: 'Injuries', text: 'Does anyone need medicine, oxygen or care they don’t have?', options: [['Yes, needed now', 3], ['Within a day', 0], ['No', 0]] }
+];
+var BLEED = [
+  { id: 'bleedWhere', section: 'Bleeding', text: 'Where is the bleeding?', options: [['Arm or leg', 0], ['Head or neck', 0], ['Chest, belly or back', 0]] },
+  { id: 'bleedType', section: 'Bleeding', text: 'What does the bleeding look like?', hint: 'Choose the closest match.', options: [['Spurting or pulsing', 3], ['Steady flow that soaks a cloth', 2], ['Slow ooze or seeping', 1]] },
+  { id: 'bleedPress', section: 'Bleeding', text: 'Does it slow down when you press firmly on it?', hint: 'Press hard with a clean cloth for a few minutes, then answer.', options: [['Yes, it slows or stops', 0], ['No, it keeps bleeding', 3]] }
+];
+var INJ = [
+  { id: 'awake', section: 'Injury check', text: 'Is the injured person awake and able to talk normally?', options: [['Yes', 0], ['Confused or very sleepy', 3], ['Not responding, but breathing', 3]] },
+  { id: 'bone', section: 'Injury check', text: 'Do you think a bone is broken?', hint: 'Signs: a limb at an odd angle, swelling, or too painful to move.', options: [['Yes', 2], ['No', 0]] }
+];
+var ENV = [
+  { id: 'trapped', section: 'Surroundings', text: 'Is anyone trapped?', options: [['Yes', 1], ['No', 0], ['Not sure', 0]] },
+  { id: 'fire', section: 'Surroundings', text: 'Do you see fire or smoke, or smell gas?', options: [['Yes', 1], ['No', 0]] },
+  { id: 'collapse', section: 'Surroundings', text: 'Are buildings collapsed or badly cracked?', options: [['Yes', 1], ['No', 0]] },
+  { id: 'flood', section: 'Surroundings', text: 'Is there flooding or rising water?', options: [['Yes', 1], ['No', 0]] },
+  { id: 'power', section: 'Surroundings', text: 'Are power lines down or is the power out?', options: [['Yes', 0], ['No', 0]] },
+  { id: 'roads', section: 'Surroundings', text: 'Are roads blocked or impassable?', options: [['Yes', 0], ['No', 0]] }
+];
+var COUNTS = {
+  people: { section: 'People', text: 'How many people are at this location?', hint: 'Count everyone, including you. One check-in can cover a whole household.', min: 1, max: 30 },
+  hurt: { section: 'People', text: 'How many of them are hurt?', hint: 'Count anyone with an injury, even a minor one.', min: 0, max: 30 },
+  trappedN: { section: 'Surroundings', text: 'How many people are trapped?', hint: 'Your best guess is fine. Responders will confirm.', min: 1, max: 20 }
+};
+var COLORS = [
+  { name: 'White', meaning: 'Not injured. Stay safe and check in again if anything changes.', bg: '#FFFFFF', fg: '#12212E', border: '2px solid #12212E' },
+  { name: 'Green', meaning: 'Walking wounded. Volunteers reach red and yellow first, so start the steps below yourself.', bg: '#2E7D32', fg: '#FFFFFF', border: '0' },
+  { name: 'Yellow', meaning: 'Injured, not urgent. Help is coming. Stay put and follow the steps below.', bg: '#F2B705', fg: '#12212E', border: '0' },
+  { name: 'Red', meaning: 'Seriously injured. CERT and first responders have been alerted. Follow the steps below until they arrive.', bg: '#B3261E', fg: '#FFFFFF', border: '0' }
+];
+var GUIDE_TONE = {
+  red: { border: '#B3261E', badge: '#B3261E' },
+  blue: { border: '#1F4E79', badge: '#1F4E79' },
+  gray: { border: '#9AA8B4', badge: '#4A5A68' }
+};
+function bigBtn(on) {
+  return on
+    ? 'min-height: 56px; padding: 12px 16px; border-radius: 14px; border: 2px solid #12212E; background: #E3ECF5; color: #12212E; font-size: 17px; font-weight: 700'
+    : 'min-height: 56px; padding: 12px 16px; border-radius: 14px; border: 1px solid #9AA8B4; background: #FFFFFF; color: #12212E; font-size: 17px; font-weight: 700';
+}
+function guide(tone, tag, title, when, steps, caution) {
+  var t = GUIDE_TONE[tone];
+  return {
+    tag: tag, title: title, when: when || '', hasWhen: !!when, caution: caution || '', hasCaution: !!caution,
+    steps: steps.map(function (s, k) { return { n: k + 1, title: s[0], body: s[1] }; }),
+    cardStyle: 'background: #FFFFFF; border: 2px solid ' + t.border + '; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 14px',
+    badgeStyle: 'font-size: 12px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; padding: 4px 8px; border-radius: 6px; color: #FFFFFF; background: ' + t.badge
+  };
+}
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = this.fresh();
+  }
+  fresh() {
+    return { i: 0, answers: {}, counts: { people: 1, hurt: 0, trappedN: 1 }, photos: 0, worse: false, address: '1450 Oak St (from GPS)' };
+  }
+  medQuestions() {
+    var a = this.state.answers;
+    var qs = COND.slice();
+    if (a.breath === 1) qs = qs.concat(BLEED);
+    if (a.injured !== undefined && a.injured !== 3) qs = qs.concat(INJ);
+    return qs;
+  }
+  score() {
+    var a = this.state.answers, max = 0;
+    this.medQuestions().concat(ENV).forEach(function (q) {
+      if (a[q.id] !== undefined) max = Math.max(max, q.options[a[q.id]][1]);
+    });
+    if (this.state.worse) max = 3;
+    return max;
+  }
+  steps() {
+    var a = this.state.answers;
+    var s = [{ t: 'alert' }, { t: 'location' }, { t: 'q', q: WHO, sec: 'Who' }, { t: 'count', key: 'people', sec: 'People' }, { t: 'count', key: 'hurt', sec: 'People' }];
+    this.medQuestions().forEach(function (q) { s.push({ t: 'q', q: q, sec: q.section }); });
+    ENV.forEach(function (q) {
+      s.push({ t: 'q', q: q, sec: q.section });
+      if (q.id === 'trapped' && a.trapped === 0) s.push({ t: 'count', key: 'trappedN', sec: 'Surroundings' });
+    });
+    s.push({ t: 'result' }, { t: 'photos' }, { t: 'done' });
+    return s;
+  }
+  go(n) {
+    var len = this.steps().length;
+    this.setState({ i: Math.max(0, Math.min(len - 1, n)) });
+  }
+  guides(score) {
+    var a = this.state.answers, out = [];
+    if (a.awake === 2) {
+      out.push(guide('red', 'Do this first', 'Recovery position',
+        'For someone who is not responding but is breathing. It keeps their airway open.',
+        [
+          ['Check breathing', 'Look at the chest, listen and feel for breath for 10 seconds. If they are not breathing, shout for help and start CPR if you are trained.'],
+          ['Arm out', 'Kneel beside them. Place the arm nearest you straight out at a right angle to their body.'],
+          ['Hand to cheek', 'Bring their far arm across their chest and hold the back of their hand against the cheek nearest you.'],
+          ['Bend the knee and roll', 'Bend their far knee up, then pull gently on that knee to roll them toward you onto their side.'],
+          ['Open the airway', 'Tilt their head back slightly and keep the bent knee in front so they don’t roll over. Check their breathing every minute until help arrives.']
+        ],
+        'If you think their neck or back is hurt, only roll them if they are vomiting or struggling to breathe.'));
+    }
+    if (a.breath === 1) {
+      var steps = [
+        ['Press hard', 'Put a clean cloth, shirt or towel on the wound and press firmly with both hands. Don’t lift it to check.'],
+        ['Add, don’t remove', 'If blood soaks through, put more cloth on top and keep pressing.'],
+        ['Hold it in place', 'Wrap a strip of blanket, a scarf or clothing tightly around the cloth so the pressure stays on.']
+      ];
+      var caution = '';
+      if (a.bleedWhere === 0 && (a.bleedType === 0 || a.bleedPress === 1)) {
+        steps.push(['Tie above the wound', 'Arm or leg still bleeding? Tie a belt or blanket strip tightly 2–3 inches above the wound, not on a joint. Twist it with a stick until the bleeding stops. Note the time and don’t loosen it.']);
+        caution = 'Tell responders a band is tied and what time you tied it.';
+      }
+      if (a.bleedWhere === 1 || a.bleedWhere === 2) caution = 'Head, neck or body wound: keep firm pressure only. Never tie anything around the neck.';
+      out.push(guide('red', score >= 3 ? 'Do this first' : 'You can do this', 'Stop heavy bleeding', '', steps, caution));
+    }
+    if (a.breath === 0) {
+      out.push(guide('red', 'Do this first', 'Trouble breathing or chest pain', '',
+        [
+          ['Sit them up', 'Help them sit leaning slightly forward. Loosen tight clothing.'],
+          ['Use their medicine', 'If they have an inhaler or prescribed heart medicine, help them take it.'],
+          ['Stay with them', 'Keep them calm and still. If they stop breathing, start CPR if you are trained.']
+        ]));
+    }
+    if (a.bone === 0 || a.walk === 1) {
+      out.push(guide('blue', 'You can do this', 'Possible broken bone', '',
+        [
+          ['Don’t straighten it', 'Leave the limb in the position you found it.'],
+          ['Keep it still', 'Support it with rolled clothes, towels or blankets on both sides.'],
+          ['Make a splint', 'Tie a rolled magazine or flat board along it, above and below the injury. Tie snug, not tight.'],
+          ['Check circulation', 'Fingers or toes should stay warm and pink. If they turn pale, blue or numb, loosen the ties.']
+        ]));
+    }
+    if (a.awake === 1 || score >= 2) {
+      out.push(guide('gray', 'Watch for', 'Signs of shock', 'Pale, cold, sweaty skin, fast breathing, or confusion.',
+        [
+          ['Lie them down', 'Have them lie flat and keep them still.'],
+          ['Keep them warm', 'Cover them with a blanket or coat.'],
+          ['No food or drink', 'Don’t give food or water if they are badly hurt.']
+        ]));
+    }
+    if (out.length === 0 && score === 1) {
+      out.push(guide('blue', 'You can do this', 'Clean and cover minor wounds', '',
+        [
+          ['Rinse', 'Rinse with clean water if you have it.'],
+          ['Cover', 'Cover with a clean cloth or bandage and keep it dry.']
+        ]));
+    }
+    return out;
+  }
+  renderVals() {
+    var self = this, st = this.state, a = st.answers, counts = st.counts;
+    var forOther = a.who === 1;
+    var steps = this.steps();
+    var i = Math.min(st.i, steps.length - 1);
+    var cur = steps[i];
+    var qSteps = steps.filter(function (x) { return x.t === 'q' || x.t === 'count'; });
+    function counter(stp) {
+      var sec = steps.filter(function (x) { return (x.t === 'q' || x.t === 'count') && x.sec === stp.sec; });
+      return (sec.indexOf(stp) + 1) + ' of ' + sec.length;
+    }
+    var q = { section: '', counter: '', text: '', hasHint: false, hint: '', options: [] };
+    if (cur.t === 'q') {
+      var txt = forOther && cur.q.textOther ? cur.q.textOther : cur.q.text;
+      var hint = cur.q.hint || '';
+      if (forOther && cur.q.section === 'Injuries' && !cur.q.textOther) hint = hint || 'Answer for the person you’re checking in for.';
+      q = {
+        section: cur.q.section, counter: counter(cur), text: txt, hasHint: !!hint, hint: hint,
+        options: cur.q.options.map(function (o, k) {
+          return {
+            label: o[0],
+            style: bigBtn(a[cur.q.id] === k) + '; text-align: left',
+            pick: function () {
+              var na = Object.assign({}, self.state.answers);
+              na[cur.q.id] = k;
+              self.setState({ answers: na, i: i + 1 });
+            }
+          };
+        })
+      };
+    }
+    var cnt = { section: '', counter: '', text: '', hint: '', value: 0, plus: null, minus: null };
+    if (cur.t === 'count') {
+      var def = COUNTS[cur.key];
+      var max = cur.key === 'hurt' ? counts.people : def.max;
+      var setC = function (v) {
+        var nc = Object.assign({}, self.state.counts);
+        nc[cur.key] = Math.max(def.min, Math.min(max, v));
+        if (cur.key === 'people' && nc.hurt > nc.people) nc.hurt = nc.people;
+        self.setState({ counts: nc });
+      };
+      cnt = {
+        section: def.section, counter: counter(cur), text: def.text, hint: def.hint, value: counts[cur.key],
+        plus: function () { setC(self.state.counts[cur.key] + 1); },
+        minus: function () { setC(self.state.counts[cur.key] - 1); }
+      };
+    }
+    var qPos = qSteps.indexOf(cur);
+    var progress = qPos >= 0 ? Math.round(((qPos + 1) / qSteps.length) * 100) : 0;
+
+    var score = this.score();
+    var c = COLORS[score];
+    var trapped = a.trapped === 0;
+    var high = trapped || a.fire === 0 || a.collapse === 0 || a.flood === 0;
+    var guides = this.guides(score);
+    var guideIntro = score >= 3
+      ? 'Help is on the way. These steps can save a life while you wait.'
+      : score === 2
+        ? 'CERT volunteers reach the most serious injuries first. You can start these steps yourself.'
+        : 'You can take care of this yourself while volunteers help the most serious injuries.';
+    var peopleLine = counts.people + (counts.people === 1 ? ' person' : ' people') + ', ' + counts.hurt + ' hurt' + (trapped ? ', ' + counts.trappedN + ' trapped' : '');
+
+    var photoTiles = [];
+    for (var p = 0; p < st.photos; p++) photoTiles.push({ n: p + 1 });
+    var resultIndex = steps.findIndex(function (x) { return x.t === 'result'; });
+    var noBack = cur.t === 'alert' || cur.t === 'result' || cur.t === 'done';
+
+    return {
+      isPublic: st.view !== 'responder',
+      isResponder: st.view === 'responder',
+      openResponder: function () { self.setState({ view: 'responder' }); },
+      closeResponder: function () { self.setState({ view: 'public' }); },
+      showBack: !noBack,
+      hideBack: noBack,
+      back: function () { self.go(i - 1); },
+      next: function () { self.go(i + 1); },
+      inQuestions: cur.t === 'q' || cur.t === 'count',
+      progressStyle: 'height: 6px; background: #D9480F; width: ' + progress + '%',
+      isAlert: cur.t === 'alert',
+      isLocation: cur.t === 'location',
+      isQuestion: cur.t === 'q',
+      isCount: cur.t === 'count',
+      isPhotos: cur.t === 'photos',
+      isResult: cur.t === 'result',
+      isDone: cur.t === 'done',
+      q: q,
+      cnt: cnt,
+      address: st.address,
+      setAddress: function (e) { self.setState({ address: e.target.value }); },
+      photoTiles: photoTiles,
+      addPhoto: function () { self.setState({ photos: Math.min(6, self.state.photos + 1) }); },
+      photoCta: st.photos > 0 ? 'Send ' + st.photos + (st.photos === 1 ? ' photo' : ' photos') : 'Skip photos',
+      photoDone: st.photos > 0 ? st.photos + ' sent' : 'None',
+      trapped: trapped,
+      trappedLine: counts.trappedN + (counts.trappedN === 1 ? ' trapped person' : ' trapped people'),
+      peopleLine: peopleLine,
+      forLabel: forOther ? 'Someone else' : 'Myself',
+      statusLabel: forOther ? 'Their status' : 'Your status',
+      result: {
+        name: c.name,
+        meaning: c.meaning,
+        cardStyle: 'border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 6px; background: ' + c.bg + '; color: ' + c.fg + '; border: ' + c.border
+      },
+      riskLabel: high ? 'High risk — stay out of damaged buildings' : 'Low risk',
+      riskStyle: 'border-radius: 12px; padding: 12px; ' + (high ? 'background: #FBE0DE; color: #8C1D17' : 'background: #DDEFE0; color: #1B5E20'),
+      hasGuides: guides.length > 0,
+      guides: guides,
+      guideIntro: guideIntro,
+      showWorse: score >= 1 && !st.worse,
+      markWorse: function () { self.setState({ worse: true }); },
+      showGuides: function () { self.go(resultIndex); },
+      restart: function () { self.setState(self.fresh()); }
+    };
+  }
+}
+</script>
+</body>
+</html>

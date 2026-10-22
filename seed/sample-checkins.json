@@ -1,0 +1,234 @@
+{
+  "_note": "SAMPLE DATA for demos only. Street names are real Milpitas streets; house numbers, notes, people and photos are made up. Load only in demo mode.",
+  "checkins": [
+    {
+      "id": "c1",
+      "zone": 6,
+      "address": "1450 Oak St",
+      "color": "red",
+      "people": 4,
+      "hurt": 2,
+      "trappedCount": 2,
+      "reports": 5,
+      "hazards": [
+        "Collapsed building",
+        "Gas smell"
+      ],
+      "note": "2 trapped under the collapsed second floor. 1 with heavy bleeding from the leg.",
+      "minutesAgo": 4,
+      "firstReportMinutesAgo": 22,
+      "status": "new",
+      "team": null,
+      "photos": [
+        "Front of house, second floor collapsed",
+        "Side yard, strong gas smell",
+        "Street view from the corner"
+      ],
+      "location": {
+        "lat": 37.42767,
+        "lng": -121.883
+      }
+    },
+    {
+      "id": "c7",
+      "zone": 3,
+      "address": "301 Abel St",
+      "color": "red",
+      "people": 3,
+      "hurt": 1,
+      "trappedCount": 1,
+      "reports": 3,
+      "hazards": [
+        "Fire or smoke"
+      ],
+      "note": "1 trapped in a back bedroom. Smoke from the garage.",
+      "minutesAgo": 6,
+      "firstReportMinutesAgo": 14,
+      "status": "new",
+      "team": null,
+      "photos": [
+        "Smoke coming from the garage"
+      ],
+      "location": {
+        "lat": 37.44567,
+        "lng": -121.919
+      }
+    },
+    {
+      "id": "c2",
+      "zone": 6,
+      "address": "212 Calaveras Blvd, Apt 3B",
+      "color": "red",
+      "people": 1,
+      "hurt": 1,
+      "trappedCount": 0,
+      "reports": 1,
+      "hazards": [],
+      "note": "Heavy bleeding from the arm, pressure not stopping it. Band tied at 2:28 PM.",
+      "minutesAgo": 9,
+      "firstReportMinutesAgo": 12,
+      "status": "new",
+      "team": null,
+      "photos": [],
+      "location": {
+        "lat": 37.42033,
+        "lng": -121.869
+      }
+    },
+    {
+      "id": "c8",
+      "zone": 5,
+      "address": "1200 Jacklin Rd",
+      "color": "yellow",
+      "people": 8,
+      "hurt": 4,
+      "trappedCount": 0,
+      "reports": 2,
+      "hazards": [],
+      "note": "4 older adults hurt. Two cannot walk.",
+      "minutesAgo": 15,
+      "firstReportMinutesAgo": 30,
+      "status": "new",
+      "team": null,
+      "photos": [],
+      "location": {
+        "lat": 37.42433,
+        "lng": -121.908
+      }
+    },
+    {
+      "id": "c3",
+      "zone": 6,
+      "address": "88 Dixon Rd",
+      "color": "yellow",
+      "people": 6,
+      "hurt": 3,
+      "trappedCount": 0,
+      "reports": 2,
+      "hazards": [
+        "Power lines down"
+      ],
+      "note": "3 hurt, one possible broken leg. Power line down in the driveway.",
+      "minutesAgo": 12,
+      "firstReportMinutesAgo": 21,
+      "status": "assigned",
+      "team": "Team 2",
+      "photos": [
+        "Power line down across the driveway"
+      ],
+      "location": {
+        "lat": 37.42967,
+        "lng": -121.889
+      }
+    },
+    {
+      "id": "c5",
+      "zone": 6,
+      "address": "17 Edsel Dr",
+      "color": "yellow",
+      "people": 3,
+      "hurt": 1,
+      "trappedCount": 0,
+      "reports": 1,
+      "hazards": [],
+      "note": "Possible broken ankle. Cannot walk.",
+      "minutesAgo": 75,
+      "firstReportMinutesAgo": 75,
+      "status": "new",
+      "team": null,
+      "photos": [],
+      "location": {
+        "lat": 37.419,
+        "lng": -121.891
+      }
+    },
+    {
+      "id": "c4",
+      "zone": 6,
+      "address": "530 Escuela Pkwy",
+      "color": "red",
+      "people": 2,
+      "hurt": 1,
+      "trappedCount": 0,
+      "reports": 1,
+      "hazards": [],
+      "note": "Not responding but breathing. Placed in recovery position.",
+      "minutesAgo": 18,
+      "firstReportMinutesAgo": 35,
+      "status": "reached",
+      "team": "Team 1",
+      "photos": [],
+      "location": {
+        "lat": 37.431,
+        "lng": -121.866
+      }
+    },
+    {
+      "id": "c6",
+      "zone": 6,
+      "address": "940 Park Victoria Dr",
+      "color": "green",
+      "people": 5,
+      "hurt": 2,
+      "trappedCount": 0,
+      "reports": 1,
+      "hazards": [],
+      "note": "Minor cuts from broken glass.",
+      "minutesAgo": 18,
+      "firstReportMinutesAgo": 18,
+      "status": "new",
+      "team": null,
+      "photos": [],
+      "location": {
+        "lat": 37.42233,
+        "lng": -121.862
+      }
+    },
+    {
+      "id": "c9",
+      "zone": 8,
+      "address": "66 Main St",
+      "color": "green",
+      "people": 2,
+      "hurt": 1,
+      "trappedCount": 0,
+      "reports": 1,
+      "hazards": [
+        "Flooding"
+      ],
+      "note": "Minor injury. Water rising in the street.",
+      "minutesAgo": 30,
+      "firstReportMinutesAgo": 30,
+      "status": "new",
+      "team": null,
+      "photos": [
+        "Water rising in the street"
+      ],
+      "location": {
+        "lat": 37.407,
+        "lng": -121.879
+      }
+    },
+    {
+      "id": "c10",
+      "zone": 6,
+      "address": "77 Russell Ln",
+      "color": "yellow",
+      "people": 2,
+      "hurt": 1,
+      "trappedCount": 0,
+      "reports": 1,
+      "hazards": [],
+      "note": "Deep cut on hand, bleeding controlled.",
+      "minutesAgo": 45,
+      "firstReportMinutesAgo": 65,
+      "status": "resolved",
+      "team": "Team 1",
+      "photos": [],
+      "location": {
+        "lat": 37.41567,
+        "lng": -121.885
+      }
+    }
+  ]
+}

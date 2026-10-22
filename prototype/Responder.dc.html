@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ReadyNet responder view</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#1F4E79}a:hover{color:#12355A}
+button{font-family:inherit;cursor:pointer}
+input{font-family:inherit}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #EEF1F4; color: #0B1620; font-family: 'Atkinson Hyperlegible', 'Segoe UI', sans-serif; overflow: hidden">
+
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 18px 16px 12px; background: #0B1620; color: #FFFFFF">
+<sc-if value="{{hasExit}}" hint-placeholder-val="{{ true }}">
+<button onClick="{{exit}}" aria-label="Back to public check-in" style="width: 48px; height: 48px; border: 0; border-radius: 24px; background: #22384A; color: #FFFFFF; display: flex; align-items: center; justify-content: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+</button>
+</sc-if>
+<sc-if value="{{noExit}}" hint-placeholder-val="{{ false }}">
+<a href="Main.dc.html" aria-label="Back to public check-in" style="width: 48px; height: 48px; border-radius: 24px; background: #22384A; color: #FFFFFF; display: flex; align-items: center; justify-content: center; text-decoration: none">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+</a>
+</sc-if>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 2px">
+<div style="font-weight: 700; font-size: 18px">ReadyNet Responder</div>
+<div style="font-size: 13px; font-weight: 700; color: #F2B9A0">{{headerSub}}</div>
+</div>
+<sc-if value="{{unlocked}}" hint-placeholder-val="{{ false }}">
+<button onClick="{{signOut}}" style="min-width: 48px; height: 48px; border: 0; border-radius: 24px; background: #22384A; color: #FFFFFF; font-size: 13px; font-weight: 700; padding: 0 10px">Sign out</button>
+</sc-if>
+<sc-if value="{{locked}}" hint-placeholder-val="{{ true }}">
+<div style="width: 48px; height: 48px"></div>
+</sc-if>
+</div>
+
+<sc-if value="{{locked}}" hint-placeholder-val="{{ true }}">
+<div style="flex: 1 1 auto; overflow-y: auto; padding: 24px 20px; display: flex; flex-direction: column; gap: 16px">
+<div style="width: 56px; height: 56px; border-radius: 16px; background: #0B1620; color: #FFFFFF; display: flex; align-items: center; justify-content: center">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+</div>
+<div style="font-size: 26px; font-weight: 700; line-height: 1.2">Responder access</div>
+<div style="font-size: 17px; color: #22384A; line-height: 1.45">Only verified CERT members and first responders can see check-ins. Enter your personal access code.</div>
+<label for="code" style="font-size: 16px; font-weight: 700">Access code</label>
+<input id="code" type="password" inputmode="numeric" autocomplete="off" value="{{code}}" onChange="{{setCode}}" style="height: 60px; border: 2px solid #4A5A68; border-radius: 12px; padding: 0 14px; font-size: 24px; letter-spacing: 4px; background: #FFFFFF; color: #0B1620">
+<sc-if value="{{hasError}}" hint-placeholder-val="{{ false }}">
+<div role="alert" style="background: #FBE0DE; color: #7A1712; border-radius: 10px; padding: 12px; font-size: 16px; font-weight: 700">That code isn't valid. Check with your CERT leader.</div>
+</sc-if>
+<button onClick="{{unlock}}" style="height: 60px; border: 0; border-radius: 14px; background: #0B1620; color: #FFFFFF; font-size: 19px; font-weight: 700">Unlock</button>
+<div style="background: #E3ECF5; border-radius: 12px; padding: 12px 14px; font-size: 15px; color: #12355A; line-height: 1.4"><b>Prototype demo code: 1989.</b> In the real app, each CERT member and responder gets a personal code from the city that can be turned off.</div>
+</div>
+</sc-if>
+
+<sc-if value="{{unlocked}}" hint-placeholder-val="{{ false }}">
+<div style="flex: 1 1 auto; overflow-y: auto; padding: 14px 14px 20px; display: flex; flex-direction: column; gap: 12px">
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<button onClick="{{zoneMine}}" style="{{zoneMineStyle}}">Zone 6 · yours</button>
+<button onClick="{{zoneAll}}" style="{{zoneAllStyle}}">All zones</button>
+</div>
+
+<sc-if value="{{isTodo}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+<div style="background: #FFFFFF; border-radius: 12px; padding: 10px; display: flex; flex-direction: column"><span style="font-size: 26px; font-weight: 700">{{sum.need}}</span><span style="font-size: 13px; font-weight: 700; color: #3B4C5A">Need a team</span></div>
+<div style="background: #B3261E; color: #FFFFFF; border-radius: 12px; padding: 10px; display: flex; flex-direction: column"><span style="font-size: 26px; font-weight: 700">{{sum.trapped}}</span><span style="font-size: 13px; font-weight: 700">People trapped</span></div>
+<div style="background: #FFFFFF; border-radius: 12px; padding: 10px; display: flex; flex-direction: column"><span style="font-size: 26px; font-weight: 700">{{sum.hurt}}</span><span style="font-size: 13px; font-weight: 700; color: #3B4C5A">People hurt</span></div>
+</div>
+
+<div style="font-size: 20px; font-weight: 700; margin-top: 4px">Do next</div>
+<div style="font-size: 14px; color: #3B4C5A; line-height: 1.4; margin-top: -6px">Red and trapped first, then where the most people are hurt.</div>
+<sc-for list="{{needList}}" as="c" hint-placeholder-count="3">
+<div style="{{c.cardStyle}}">
+<div style="display: flex; align-items: center; gap: 8px">
+<span style="flex: 0 0 34px; height: 34px; border-radius: 17px; background: #0B1620; color: #FFFFFF; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{c.rank}}</span>
+<span style="{{c.colorStyle}}">{{c.colorLabel}}</span>
+<sc-if value="{{c.isTrapped}}" hint-placeholder-val="{{ false }}">
+<span style="font-size: 13px; font-weight: 700; padding: 5px 8px; border-radius: 6px; background: #0B1620; color: #FFFFFF">{{c.trapped}} TRAPPED</span>
+</sc-if>
+<span style="margin-left: auto; font-size: 13px; font-weight: 700; color: #3B4C5A">Zone {{c.zone}}</span>
+</div>
+<div style="font-size: 21px; font-weight: 700; line-height: 1.2">{{c.addr}}</div>
+<div style="font-size: 17px; font-weight: 700">{{c.peopleLine}}</div>
+<sc-if value="{{c.merged}}" hint-placeholder-val="{{ false }}">
+<div style="font-size: 14px; font-weight: 700; color: #12355A; background: #E3ECF5; border-radius: 8px; padding: 8px 10px">{{c.mergedLine}}</div>
+</sc-if>
+<div style="font-size: 16px; line-height: 1.4; color: #22384A">{{c.detail}}</div>
+<sc-if value="{{c.hasHazards}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{c.hazards}}" as="hz" hint-placeholder-count="1">
+<span style="font-size: 14px; font-weight: 700; padding: 5px 9px; border-radius: 8px; background: #F1ECF6; color: #4E2A84">{{hz.label}}</span>
+</sc-for>
+</div>
+</sc-if>
+<div style="{{c.freshStyle}}">{{c.fresh}}</div>
+<div style="font-size: 14px; color: #3B4C5A">{{c.timeline}}</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<a href="{{c.nav}}" target="_blank" rel="noopener" style="height: 56px; border-radius: 12px; background: #1F4E79; color: #FFFFFF; font-size: 17px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8z"/></svg>
+Navigate
+</a>
+<button onClick="{{c.openPhotos}}" style="{{c.photoBtnStyle}}">{{c.photoLabel}}</button>
+</div>
+<button onClick="{{c.action}}" style="{{c.actionStyle}}">{{c.actionLabel}}</button>
+<sc-if value="{{c.picking}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 8px; background: #F4F6F8; border-radius: 12px; padding: 10px">
+<div style="font-size: 15px; font-weight: 700">Pick an available team</div>
+<sc-for list="{{c.teamChoices}}" as="tm" hint-placeholder-count="2">
+<button onClick="{{tm.pick}}" style="height: 56px; border: 2px solid #0B1620; border-radius: 12px; background: #FFFFFF; color: #0B1620; font-size: 17px; font-weight: 700; display: flex; align-items: center; justify-content: space-between; padding: 0 14px"><span>{{tm.name}}</span><span style="font-size: 15px; font-weight: 400">{{tm.size}} people · {{tm.where}}</span></button>
+</sc-for>
+<sc-if value="{{c.noTeams}}" hint-placeholder-val="{{ false }}">
+<div style="font-size: 15px; color: #7A1712; font-weight: 700">No teams free. Finish or reassign a team first.</div>
+</sc-if>
+</div>
+</sc-if>
+</div>
+</sc-for>
+<sc-if value="{{noNeed}}" hint-placeholder-val="{{ false }}">
+<div style="background: #FFFFFF; border-radius: 14px; padding: 16px; font-size: 16px">Every check-in here has a team. Check In progress below.</div>
+</sc-if>
+
+<div style="font-size: 20px; font-weight: 700; margin-top: 8px">In progress</div>
+<sc-for list="{{progressList}}" as="c" hint-placeholder-count="2">
+<div style="{{c.cardStyle}}">
+<div style="display: flex; align-items: center; gap: 8px">
+<span style="{{c.colorStyle}}">{{c.colorLabel}}</span>
+<span style="{{c.statusStyle}}">{{c.statusLabel}}</span>
+<span style="margin-left: auto; font-size: 13px; font-weight: 700; color: #3B4C5A">Zone {{c.zone}}</span>
+</div>
+<div style="font-size: 19px; font-weight: 700; line-height: 1.2">{{c.addr}}</div>
+<div style="font-size: 16px; font-weight: 700">{{c.peopleLine}} · {{c.teamLine}}</div>
+<div style="{{c.freshStyle}}">{{c.fresh}}</div>
+<div style="font-size: 14px; color: #3B4C5A">{{c.timeline}}</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<a href="{{c.nav}}" target="_blank" rel="noopener" style="height: 52px; border-radius: 12px; background: #1F4E79; color: #FFFFFF; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">Navigate</a>
+<button onClick="{{c.action}}" style="{{c.actionStyle}}">{{c.actionLabel}}</button>
+</div>
+</div>
+</sc-for>
+
+<button onClick="{{toggleResolved}}" style="height: 52px; border: 1px solid #9AA8B4; border-radius: 12px; background: #FFFFFF; color: #0B1620; font-size: 16px; font-weight: 700; margin-top: 8px">{{resolvedLabel}}</button>
+<sc-if value="{{showResolved}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{resolvedList}}" as="c" hint-placeholder-count="1">
+<div style="background: #FFFFFF; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 4px; opacity: 0.75">
+<div style="font-size: 16px; font-weight: 700">{{c.addr}} · Resolved</div>
+<div style="font-size: 14px; color: #3B4C5A">{{c.timeline}}</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{isMap}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<button onClick="{{layerHelp}}" style="{{layerHelpStyle}}">Who needs help</button>
+<button onClick="{{layerHazard}}" style="{{layerHazardStyle}}">Hazards</button>
+</div>
+<div style="position: relative; width: 336px; height: 336px; align-self: center; border-radius: 14px; overflow: hidden; border: 1px solid #C2CDD6; background: #FFFFFF">
+<div style="position: absolute; left: 0; top: 0; width: 336px; height: 336px; display: grid; grid-template-columns: repeat(8, minmax(0, 1fr))">
+<sc-for list="{{cells}}" as="cell" hint-placeholder-count="96">
+<div style="{{cell.style}}"></div>
+</sc-for>
+</div>
+<sc-for list="{{zoneBoxes}}" as="z" hint-placeholder-count="8">
+<div style="{{z.boxStyle}}"><span style="font-size: 12px; font-weight: 700; padding: 2px 6px; border-radius: 5px; background: rgba(255,255,255,0.92); color: #0B1620">Zone {{z.n}}</span></div>
+</sc-for>
+<sc-for list="{{dots}}" as="d" hint-placeholder-count="6">
+<button onClick="{{d.pick}}" aria-label="{{d.aria}}" style="{{d.style}}">{{d.label}}</button>
+</sc-for>
+</div>
+<div style="width: 336px; align-self: center; display: flex; flex-direction: column; gap: 4px">
+<div style="{{legendStyle}}"></div>
+<div style="display: flex; justify-content: space-between; font-size: 13px; color: #3B4C5A"><span>{{legendLow}}</span><span>{{legendHigh}}</span></div>
+</div>
+<div style="font-size: 14px; color: #3B4C5A; line-height: 1.4">Dots are open check-ins, numbered by priority. Tap one to open it in Do next. Heat counts people, not phones.</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isTeams}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 20px; font-weight: 700">Teams</div>
+<div style="font-size: 14px; color: #3B4C5A">{{teamSummary}}</div>
+<sc-for list="{{teams}}" as="tm" hint-placeholder-count="5">
+<div style="{{tm.cardStyle}}">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px">
+<div style="font-size: 19px; font-weight: 700">{{tm.name}}</div>
+<span style="{{tm.statusStyle}}">{{tm.status}}</span>
+</div>
+<div style="font-size: 16px">{{tm.size}} people · Lead: {{tm.lead}}</div>
+<div style="font-size: 16px; font-weight: 700">{{tm.where}}</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); background: #0B1620; padding: 6px 6px 10px">
+<sc-for list="{{tabs}}" as="tb" hint-placeholder-count="3">
+<button onClick="{{tb.pick}}" style="{{tb.style}}">{{tb.label}}</button>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{viewing}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; left: 0; top: 0; width: 390px; height: 844px; background: #0B1620; color: #FFFFFF; display: flex; flex-direction: column">
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 18px 16px 12px; gap: 10px">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<div style="font-size: 13px; font-weight: 700; color: #F2B9A0; letter-spacing: 1px; text-transform: uppercase">Photos from residents</div>
+<div style="font-size: 19px; font-weight: 700">{{photoAddr}}</div>
+</div>
+<button onClick="{{closePhotos}}" style="height: 48px; padding: 0 16px; border: 0; border-radius: 24px; background: #FFFFFF; color: #0B1620; font-size: 16px; font-weight: 700">Close</button>
+</div>
+<div style="flex: 1 1 auto; overflow-y: auto; padding: 8px 16px 24px; display: flex; flex-direction: column; gap: 14px">
+<sc-for list="{{photoList}}" as="ph" hint-placeholder-count="2">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="height: 200px; border-radius: 12px; background: #3B4C5A; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #C9D4DD">
+<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg>
+<span style="font-size: 13px; font-weight: 700">Sample photo {{ph.n}}</span>
+</div>
+<div style="font-size: 16px; font-weight: 700">{{ph.caption}}</div>
+<div style="font-size: 14px; color: #C9D4DD">{{ph.meta}}</div>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"onExit":{"editor":null},"$preview":{"width":390,"height":844}}'>
+var CODE = '1989';
+var NOW0 = 14 * 60 + 40;
+var ITEMS = [
+  { id: 'c1', zone: 6, addr: '1450 Oak St', color: 'red', people: 4, hurt: 2, trapped: 2, reports: 5, firstRep: 858, lastRep: 876,
+    photos: [['Front of house, second floor collapsed', 2], ['Side yard, strong gas smell', 1], ['Street view from the corner', 3]],
+    hazards: ['Collapsed building', 'Gas smell'], detail: '2 trapped under the collapsed second floor. 1 with heavy bleeding from the leg.', updated: 876, x: 5.2, y: 7.1, status: 'new', team: null, hist: [['New', 858]] },
+  { id: 'c7', zone: 3, addr: '301 Abel St', color: 'red', people: 3, hurt: 1, trapped: 1, reports: 3, firstRep: 866, lastRep: 874,
+    photos: [['Smoke coming from the garage', 1]], hazards: ['Fire or smoke'], detail: '1 trapped in a back bedroom. Smoke from the garage.', updated: 874, x: 1.6, y: 4.4, status: 'new', team: null, hist: [['New', 866]] },
+  { id: 'c2', zone: 6, addr: '212 Calaveras Blvd, Apt 3B', color: 'red', people: 1, hurt: 1, trapped: 0, reports: 1,
+    photos: [], hazards: [], detail: 'Heavy bleeding from the arm, pressure not stopping it. Band tied at 2:28 PM.', updated: 871, x: 6.6, y: 8.2, status: 'new', team: null, hist: [['New', 868]] },
+  { id: 'c8', zone: 5, addr: '1200 Jacklin Rd', color: 'yellow', people: 8, hurt: 4, trapped: 0, reports: 2, firstRep: 850, lastRep: 865,
+    photos: [], hazards: [], detail: '4 older adults hurt. Two cannot walk.', updated: 865, x: 2.7, y: 7.6, status: 'new', team: null, hist: [['New', 850]] },
+  { id: 'c3', zone: 6, addr: '88 Dixon Rd', color: 'yellow', people: 6, hurt: 3, trapped: 0, reports: 2, firstRep: 859, lastRep: 868,
+    photos: [['Power line down across the driveway', 1]], hazards: ['Power lines down'], detail: '3 hurt, one possible broken leg. Power line down in the driveway.', updated: 868, x: 4.6, y: 6.8, status: 'assigned', team: 'B', hist: [['New', 859], ['Assigned', 870]] },
+  { id: 'c5', zone: 6, addr: '17 Edsel Dr', color: 'yellow', people: 3, hurt: 1, trapped: 0, reports: 1,
+    photos: [], hazards: [], detail: 'Possible broken ankle. Cannot walk.', updated: 805, x: 4.4, y: 8.4, status: 'new', team: null, hist: [['New', 805]] },
+  { id: 'c4', zone: 6, addr: '530 Escuela Pkwy', color: 'red', people: 2, hurt: 1, trapped: 0, reports: 1,
+    photos: [], hazards: [], detail: 'Not responding but breathing. Placed in recovery position.', updated: 862, x: 6.9, y: 6.6, status: 'reached', team: 'A', hist: [['New', 845], ['Assigned', 850], ['Reached', 862]] },
+  { id: 'c6', zone: 6, addr: '940 Park Victoria Dr', color: 'green', people: 5, hurt: 2, trapped: 0, reports: 1,
+    photos: [], hazards: [], detail: 'Minor cuts from broken glass.', updated: 862, x: 7.3, y: 7.9, status: 'new', team: null, hist: [['New', 862]] },
+  { id: 'c9', zone: 8, addr: '66 Main St', color: 'green', people: 2, hurt: 1, trapped: 0, reports: 1,
+    photos: [['Water rising in the street', 1]], hazards: ['Flooding'], detail: 'Minor injury. Water rising in the street.', updated: 850, x: 5.6, y: 10.2, status: 'new', team: null, hist: [['New', 850]] },
+  { id: 'c10', zone: 6, addr: '77 Russell Ln', color: 'yellow', people: 2, hurt: 1, trapped: 0, reports: 1,
+    photos: [], hazards: [], detail: 'Deep cut on hand, bleeding controlled.', updated: 835, x: 5.0, y: 8.9, status: 'resolved', team: 'A', hist: [['New', 815], ['Assigned', 820], ['Reached', 828], ['Resolved', 835]] }
+];
+var TEAMS = [
+  { id: 'A', name: 'Team A', size: 4, lead: 'Aditi', home: 6 },
+  { id: 'B', name: 'Team B', size: 3, lead: '[Name]', home: 6 },
+  { id: 'C', name: 'Team C', size: 5, lead: '[Name]', home: 6 },
+  { id: 'D', name: 'Team D', size: 2, lead: '[Name]', home: 6 },
+  { id: 'E', name: 'Team E', size: 4, lead: '[Name]', home: 3 }
+];
+var ZONES = [
+  { n: 1, help: 30, danger: 1, hx: 2.2, hy: 1.4 }, { n: 2, help: 18, danger: 0, hx: 5.8, hy: 1.6 },
+  { n: 3, help: 80, danger: 4, hx: 1.8, hy: 4.6 }, { n: 4, help: 10, danger: 0, hx: 6.0, hy: 4.4 },
+  { n: 5, help: 60, danger: 1, hx: 2.4, hy: 7.4 }, { n: 6, help: 110, danger: 5, hx: 5.6, hy: 7.6 },
+  { n: 7, help: 22, danger: 1, hx: 2.0, hy: 10.4 }, { n: 8, help: 40, danger: 3, hx: 5.9, hy: 10.5 }
+];
+var COLOR = {
+  red: { label: 'RED', bg: '#B3261E', fg: '#FFFFFF', tier: 3 },
+  yellow: { label: 'YELLOW', bg: '#F2B705', fg: '#0B1620', tier: 2 },
+  green: { label: 'GREEN', bg: '#2E7D32', fg: '#FFFFFF', tier: 1 }
+};
+var RAMP_HELP = ['#FDF1E3', '#F2A34E', '#9E1B14'];
+var RAMP_HAZ = ['#F1ECF6', '#A889C9', '#4E2A84'];
+function hex(h) { return [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)]; }
+function mix(a, b, t) { var x = hex(a), y = hex(b); return 'rgb(' + x.map(function (v, k) { return Math.round(v + (y[k] - v) * t); }).join(',') + ')'; }
+function ramp(r, t) { t = Math.max(0, Math.min(1, t)); return t < 0.5 ? mix(r[0], r[1], t * 2) : mix(r[1], r[2], (t - 0.5) * 2); }
+function clock(abs) {
+  var h = Math.floor(abs / 60) % 24, m = abs % 60;
+  return ((h + 11) % 12 + 1) + ':' + (m < 10 ? '0' : '') + m + (h < 12 ? ' AM' : ' PM');
+}
+function ago(now, abs) { var d = now - abs; return d <= 0 ? 'just now' : d + ' min ago'; }
+function prio(c) { return COLOR[c.color].tier * 1000 + (c.trapped > 0 ? 3000 : 0) + c.trapped * 50 + c.hurt * 10 + c.people; }
+function btn(bg, fg) { return 'height: 56px; border: 0; border-radius: 12px; font-size: 17px; font-weight: 700; background: ' + bg + '; color: ' + fg; }
+function seg(on) {
+  return on
+    ? 'height: 52px; border: 2px solid #0B1620; border-radius: 12px; background: #0B1620; color: #FFFFFF; font-size: 16px; font-weight: 700'
+    : 'height: 52px; border: 2px solid #9AA8B4; border-radius: 12px; background: #FFFFFF; color: #0B1620; font-size: 16px; font-weight: 700';
+}
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      unlocked: false, code: '', error: false, tab: 'todo', zone: 6, layer: 'help', clock: 0,
+      items: ITEMS.map(function (c) { return Object.assign({}, c, { hist: c.hist.slice() }); }),
+      picking: null, viewing: null, showResolved: false, focus: null
+    };
+  }
+  update(id, fn) {
+    var items = this.state.items.map(function (c) { return c.id === id ? fn(Object.assign({}, c, { hist: c.hist.slice() })) : c; });
+    this.setState({ items: items, clock: this.state.clock + 1, picking: null });
+  }
+  renderVals() {
+    var self = this, st = this.state, now = NOW0 + st.clock;
+    var onExit = this.props.onExit;
+    var inZone = function (c) { return st.zone === 'all' || c.zone === st.zone; };
+    var busy = {};
+    st.items.forEach(function (c) { if (c.team && (c.status === 'assigned' || c.status === 'reached')) busy[c.team] = c; });
+    var freeTeams = TEAMS.filter(function (t) { return !busy[t.id]; });
+    var teamName = function (id) { var t = TEAMS.find(function (x) { return x.id === id; }); return t ? t.name + ' (' + t.size + ')' : ''; };
+
+    function card(c, rank) {
+      var col = COLOR[c.color];
+      var age = now - c.updated, stale = age > 60;
+      var statusMap = { new: 'New', assigned: 'Assigned', reached: 'On scene', resolved: 'Resolved' };
+      var action, actionLabel, actionStyle;
+      if (c.status === 'new') {
+        actionLabel = st.picking === c.id ? 'Cancel' : 'Assign a team';
+        actionStyle = btn('#D9480F', '#FFFFFF');
+        action = function () { self.setState({ picking: st.picking === c.id ? null : c.id }); };
+      } else if (c.status === 'assigned') {
+        actionLabel = 'Mark reached'; actionStyle = btn('#0B1620', '#FFFFFF');
+        action = function () { self.update(c.id, function (x) { x.status = 'reached'; x.updated = now + 1; x.hist.push(['Reached', now + 1]); return x; }); };
+      } else {
+        actionLabel = 'Mark resolved'; actionStyle = btn('#2E7D32', '#FFFFFF');
+        action = function () { self.update(c.id, function (x) { x.status = 'resolved'; x.updated = now + 1; x.hist.push(['Resolved', now + 1]); return x; }); };
+      }
+      var focused = st.focus === c.id;
+      return {
+        id: c.id, rank: rank, zone: c.zone, addr: c.addr, detail: c.detail,
+        colorLabel: col.label,
+        colorStyle: 'font-size: 13px; font-weight: 700; letter-spacing: 0.5px; padding: 5px 8px; border-radius: 6px; background: ' + col.bg + '; color: ' + col.fg,
+        isTrapped: c.trapped > 0, trapped: c.trapped,
+        peopleLine: c.people + (c.people === 1 ? ' person' : ' people') + ' · ' + c.hurt + ' hurt',
+        merged: c.reports > 1,
+        mergedLine: c.reports + ' reports merged into one · first ' + clock(c.firstRep || c.updated) + ', latest ' + clock(c.lastRep || c.updated),
+        hasHazards: c.hazards.length > 0,
+        hazards: c.hazards.map(function (h) { return { label: h }; }),
+        fresh: stale ? 'Updated ' + age + ' min ago · may be out of date' : 'Updated ' + ago(now, c.updated),
+        freshStyle: 'font-size: 15px; font-weight: 700; ' + (stale ? 'color: #7A1712' : 'color: #1B5E20'),
+        timeline: c.hist.map(function (h) { return h[0] + ' ' + clock(h[1]); }).join('  →  ') + (c.team ? '  ·  ' + teamName(c.team) : ''),
+        statusLabel: statusMap[c.status],
+        statusStyle: 'font-size: 13px; font-weight: 700; padding: 5px 8px; border-radius: 6px; background: ' + (c.status === 'reached' ? '#DDEFE0; color: #1B5E20' : '#E3ECF5; color: #12355A'),
+        teamLine: teamName(c.team),
+        nav: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(c.addr + ', Milpitas, CA'),
+        photoLabel: c.photos.length ? 'Photos (' + c.photos.length + ')' : 'No photos',
+        photoBtnStyle: c.photos.length ? btn('#FFFFFF', '#0B1620') + '; border: 2px solid #0B1620' : btn('#E4E9EE', '#4A5A68'),
+        openPhotos: function () { if (c.photos.length) self.setState({ viewing: c.id }); },
+        action: action, actionLabel: actionLabel, actionStyle: actionStyle,
+        picking: st.picking === c.id,
+        noTeams: freeTeams.length === 0,
+        teamChoices: freeTeams.map(function (t) {
+          return {
+            name: t.name, size: t.size, where: 'at Zone ' + t.home + ' cache',
+            pick: function () { self.update(c.id, function (x) { x.status = 'assigned'; x.team = t.id; x.updated = now + 1; x.hist.push(['Assigned', now + 1]); return x; }); }
+          };
+        }),
+        cardStyle: 'background: #FFFFFF; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 10px; border: ' + (focused ? '3px solid #D9480F' : '1px solid #C2CDD6') + '; opacity: ' + (stale ? '0.6' : '1')
+      };
+    }
+
+    var visible = st.items.filter(inZone);
+    var need = visible.filter(function (c) { return c.status === 'new'; }).sort(function (a, b) { return prio(b) - prio(a); });
+    var inProg = visible.filter(function (c) { return c.status === 'assigned' || c.status === 'reached'; }).sort(function (a, b) { return prio(b) - prio(a); });
+    var resolved = visible.filter(function (c) { return c.status === 'resolved'; });
+    var open = visible.filter(function (c) { return c.status !== 'resolved'; });
+    var rankOf = {};
+    need.forEach(function (c, k) { rankOf[c.id] = k + 1; });
+
+    var maxHelp = 0, maxHaz = 0, help = [], haz = [];
+    for (var r = 0; r < 12; r++) for (var cc = 0; cc < 8; cc++) {
+      var vh = 0, vz = 0;
+      ZONES.forEach(function (z) { var dx = cc + 0.5 - z.hx, dy = r + 0.5 - z.hy, g = Math.exp(-(dx * dx + dy * dy) / 3.2); vh += z.help * g; vz += z.danger * g; });
+      help.push(vh); haz.push(vz); if (vh > maxHelp) maxHelp = vh; if (vz > maxHaz) maxHaz = vz;
+    }
+    var useHelp = st.layer === 'help';
+    var cells = (useHelp ? help : haz).map(function (v, k) {
+      return { k: k, style: 'background: ' + ramp(useHelp ? RAMP_HELP : RAMP_HAZ, v / (useHelp ? maxHelp : maxHaz)) + '; border-right: 1px solid rgba(255,255,255,0.35); border-bottom: 1px solid rgba(255,255,255,0.35)' };
+    });
+    var zoneBoxes = ZONES.map(function (z) {
+      var col = (z.n - 1) % 2, row = Math.floor((z.n - 1) / 2), mine = z.n === 6;
+      return { n: z.n, boxStyle: 'position: absolute; left: ' + (col * 168) + 'px; top: ' + (row * 84) + 'px; width: 168px; height: 84px; box-sizing: border-box; padding: 5px; border: ' + (mine ? '3px solid #0B1620' : '1px solid rgba(11,22,32,0.3)') };
+    });
+    var dots = open.slice().sort(function (a, b) { return prio(b) - prio(a); }).map(function (c, k) {
+      var col = COLOR[c.color];
+      return {
+        label: String(k + 1),
+        aria: c.addr + ', ' + c.color + (c.trapped ? ', ' + c.trapped + ' trapped' : ''),
+        pick: function () { self.setState({ tab: 'todo', zone: c.zone, focus: c.id }); },
+        style: 'position: absolute; left: ' + (c.x * 42 - 15) + 'px; top: ' + (c.y * 28 - 15) + 'px; width: 30px; height: 30px; border-radius: 15px; font-size: 13px; font-weight: 700; padding: 0; display: flex; align-items: center; justify-content: center; background: ' + col.bg + '; color: ' + col.fg + '; border: ' + (c.trapped ? '4px solid #0B1620' : '2px solid #FFFFFF')
+      };
+    });
+
+    var teams = TEAMS.map(function (t) {
+      var job = busy[t.id];
+      var status = job ? (job.status === 'reached' ? 'On scene' : 'Assigned') : 'Available';
+      return {
+        name: t.name, size: t.size, lead: t.lead, status: status,
+        where: job ? job.addr + ' (Zone ' + job.zone + ')' : 'Waiting at Zone ' + t.home + ' cache',
+        statusStyle: 'font-size: 13px; font-weight: 700; padding: 5px 9px; border-radius: 6px; ' + (job ? (job.status === 'reached' ? 'background: #DDEFE0; color: #1B5E20' : 'background: #E3ECF5; color: #12355A') : 'background: #FDF3CF; color: #5C4500'),
+        cardStyle: 'background: #FFFFFF; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 6px; border: 1px solid #C2CDD6'
+      };
+    });
+    var peopleOut = TEAMS.reduce(function (s, t) { return s + (busy[t.id] ? t.size : 0); }, 0);
+    var peopleAll = TEAMS.reduce(function (s, t) { return s + t.size; }, 0);
+
+    var tabDefs = [['todo', 'Do next'], ['map', 'Map'], ['teams', 'Teams']];
+    var viewItem = st.items.find(function (c) { return c.id === st.viewing; });
+
+    return {
+      hasExit: typeof onExit === 'function',
+      noExit: typeof onExit !== 'function',
+      exit: function () { if (typeof onExit === 'function') onExit(); },
+      unlocked: st.unlocked, locked: !st.unlocked,
+      headerSub: st.unlocked ? 'Sample data · ' + clock(now) : 'CERT and first responders',
+      code: st.code,
+      setCode: function (e) { self.setState({ code: e.target.value, error: false }); },
+      hasError: st.error,
+      unlock: function () {
+        if (String(self.state.code).trim() === CODE) self.setState({ unlocked: true, error: false, code: '' });
+        else self.setState({ error: true });
+      },
+      signOut: function () { self.setState({ unlocked: false, code: '', error: false, viewing: null }); },
+      zoneMine: function () { self.setState({ zone: 6, focus: null }); },
+      zoneAll: function () { self.setState({ zone: 'all', focus: null }); },
+      zoneMineStyle: seg(st.zone === 6),
+      zoneAllStyle: seg(st.zone === 'all'),
+      isTodo: st.tab === 'todo', isMap: st.tab === 'map', isTeams: st.tab === 'teams',
+      sum: {
+        need: need.length,
+        trapped: open.reduce(function (s, c) { return s + c.trapped; }, 0),
+        hurt: open.reduce(function (s, c) { return s + c.hurt; }, 0)
+      },
+      needList: need.map(function (c) { return card(c, rankOf[c.id]); }),
+      noNeed: need.length === 0,
+      progressList: inProg.map(function (c) { return card(c, 0); }),
+      resolvedList: resolved.map(function (c) { return card(c, 0); }),
+      showResolved: st.showResolved,
+      resolvedLabel: (st.showResolved ? 'Hide resolved' : 'Show resolved') + ' (' + resolved.length + ')',
+      toggleResolved: function () { self.setState({ showResolved: !self.state.showResolved }); },
+      layerHelp: function () { self.setState({ layer: 'help' }); },
+      layerHazard: function () { self.setState({ layer: 'hazard' }); },
+      layerHelpStyle: seg(useHelp),
+      layerHazardStyle: seg(!useHelp),
+      cells: cells, zoneBoxes: zoneBoxes, dots: dots,
+      legendStyle: 'height: 12px; border-radius: 6px; background: linear-gradient(90deg, ' + (useHelp ? RAMP_HELP : RAMP_HAZ).join(', ') + ')',
+      legendLow: useHelp ? 'Fewer people hurt' : 'No hazards reported',
+      legendHigh: useHelp ? 'Most people hurt' : 'Most dangerous',
+      teams: teams,
+      teamSummary: freeTeams.length + ' of ' + TEAMS.length + ' teams available · ' + peopleOut + ' of ' + peopleAll + ' volunteers deployed',
+      tabs: tabDefs.map(function (t) {
+        var on = st.tab === t[0];
+        return {
+          label: t[1],
+          pick: function () { self.setState({ tab: t[0] }); },
+          style: 'height: 56px; border: 0; border-radius: 12px; font-size: 17px; font-weight: 700; background: ' + (on ? '#FFFFFF' : 'transparent') + '; color: ' + (on ? '#0B1620' : '#C9D4DD')
+        };
+      }),
+      viewing: !!viewItem,
+      photoAddr: viewItem ? viewItem.addr : '',
+      photoList: viewItem ? viewItem.photos.map(function (p, k) { return { n: k + 1, caption: p[0], meta: 'Sent by ' + p[1] + (p[1] === 1 ? ' resident' : ' residents') + ' · ' + clock((viewItem.lastRep || viewItem.updated) - k * 3) }; }) : [],
+      closePhotos: function () { self.setState({ viewing: null }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

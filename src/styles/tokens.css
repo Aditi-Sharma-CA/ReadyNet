@@ -1,0 +1,39 @@
+/* Design tokens: every color the app uses, in one place (HANDOVER.md section 9).
+   Screens use var(--name) instead of typing the hex code, so a color is changed only here. */
+:root {
+  --ink: #12212E;          /* text, headers, primary buttons (public view) */
+  --ink-2: #3B4C5A;        /* secondary text */
+  --ink-3: #4A5A68;        /* small labels and hints (from the prototype) */
+  --line: #D5DDE4;         /* borders */
+  --line-strong: #9AA8B4;  /* input and answer-button borders (from the prototype) */
+  --bg: #F4F6F8;           /* page background (public view) */
+  --surface: #FFFFFF;      /* cards */
+
+  --action: #D9480F;       /* main call to action, progress fill */
+  --info: #1F4E79;         /* Navigate button, info boxes */
+  --info-bg: #E3ECF5;      /* selected answer */
+
+  --red: #B3261E;          /* red triage, rescue alerts */
+  --yellow: #F2B705;       /* yellow triage (use dark text on it) */
+  --green: #2E7D32;        /* green triage, success */
+  --white-triage: #FFFFFF; /* white triage, shown with a 2px --ink border */
+
+  --hazard: #4E2A84;       /* hazard chips */
+  --hazard-bg: #F1ECF6;
+
+  --risk-high-bg: #FBE0DE;
+  --risk-high-fg: #8C1D17;
+  --risk-low-bg: #DDEFE0;
+  --risk-low-fg: #1B5E20;
+
+  --caution-bg: #FBE3D6;   /* first-aid caution box (from the prototype) */
+  --caution-fg: #6E2406;
+
+  --font: 'Atkinson Hyperlegible', 'Segoe UI', sans-serif;
+}
+
+/* The responder view uses a darker ink and a slightly different background. */
+.responder {
+  --ink: #0B1620;
+  --bg: #EEF1F4;
+}

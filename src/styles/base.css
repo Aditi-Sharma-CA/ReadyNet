@@ -1,0 +1,67 @@
+/* Basic styles shared by every screen. Colors come from tokens.css. */
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+button, input { font-family: inherit; font-size: inherit; }
+button { cursor: pointer; }
+a { color: var(--info); }
+
+/* Phone-first: full width on a phone; on a wide screen, a centered 480px column. */
+.app-column {
+  max-width: 480px;
+  min-height: 100vh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+/* Dark header bar with the ReadyNet logo */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 12px;
+  background: var(--ink);
+  color: #FFFFFF;
+}
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.3px;
+}
+.header-side { width: 44px; height: 44px; }
+.header-back {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 22px;
+  background: #22384A;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Main scrolling area under the header */
+.content {
+  flex: 1 1 auto;
+  padding: 24px 20px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Keyboard focus is always visible (accessibility) */
+:focus-visible { outline: 3px solid var(--info); outline-offset: 2px; }

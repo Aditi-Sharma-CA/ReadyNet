@@ -1,0 +1,13 @@
+# Installed packages (recreate with: npm install)
+node_modules/
+# Built app (recreate with: npm run build)
+dist/
+# Secret Firebase keys - NEVER commit these
+.env.local
+.env.*.local
+# Firebase CLI cache
+.firebase/
+# The original handover zip (its contents are already unpacked here)
+readynet-handover.zip
+.DS_Store
+*.log
