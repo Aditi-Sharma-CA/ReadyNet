@@ -10,7 +10,7 @@ html, body {
   line-height: 1.4;
 }
 
-button, input { font-family: inherit; font-size: inherit; }
+button, input, select { font-family: inherit; font-size: inherit; }
 button { cursor: pointer; }
 a { color: var(--info); }
 

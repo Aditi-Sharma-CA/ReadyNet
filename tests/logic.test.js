@@ -10,6 +10,7 @@ import { buildSteps, cleanAnswers } from '../src/logic/flow.js';
 import { buildNote } from '../src/logic/note.js';
 import { buildCheckIn } from '../src/logic/checkin.js';
 import { zoneForLocation } from '../src/logic/zone.js';
+import { priority, byPriority, needsTeam } from '../src/logic/ranking.js';
 
 // Answers are option positions: 0 = first option. This person is not hurt at all.
 const NOT_HURT = { who: 0, injured: 3, walk: 0, breath: 2, water: 0, meds: 2 };
@@ -82,4 +83,20 @@ test('check-in record', () => {
   assert.equal(record.status, 'new');
   assert.equal(record.forWhom, 'self');
   assert.equal(zoneForLocation(37.77, -122.42), null, 'outside Milpitas has no zone');
+});
+
+test('ranking: trapped or red first, then yellow, then green', () => {
+  const card = (color, trappedCount, hurt, people) => ({ color, trappedCount, hurt, people, status: 'new' });
+  const list = [
+    card('green', 0, 3, 5),
+    card('yellow', 0, 4, 8),
+    card('red', 0, 1, 1),
+    card('yellow', 1, 1, 3),  // trapped jumps above red-without-trapped
+    card('red', 2, 2, 4),
+  ];
+  const order = [...list].sort(byPriority).map((c) => `${c.color}/${c.trappedCount}`);
+  assert.deepEqual(order, ['red/2', 'yellow/1', 'red/0', 'yellow/0', 'green/0']);
+  assert.ok(priority(card('red', 0, 3, 3)) > priority(card('red', 0, 2, 9)), 'more hurt beats more people');
+  assert.equal(needsTeam(card('white', 0, 0, 2)), false, 'white with nobody trapped is not listed');
+  assert.equal(needsTeam(card('white', 1, 0, 2)), true, 'white but trapped is listed');
 });
