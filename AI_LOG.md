@@ -14,4 +14,4 @@ ReadyNet was designed by Aditi. AI (Claude, by Anthropic) was used to help desig
 ## Build sessions
 | Date | Asked for | Claude Code built | Aditi tested / changed |
 | --- | --- | --- | --- |
-| | | | |
+| Oct 21–22, 2026 | Day 1: Vite + React setup, design tokens, routes, all resident check-in screens with local state (no Firebase yet) | Project setup, tokens.css, / and /responder routes, Alert/Location/Who/counters/questions/Result/Photos/Done screens, question + first-aid text as data, flow/triage/risk/first-aid/zone rules in src/logic/, checks against the §14 triage list | Tested every step on phone. Decided: real GPS now (tested over https after deploy); no zone number when outside zones; clear answers to questions that drop out of the flow (fixes prototype bug); leave 0-hurt vs injured mismatch as is |

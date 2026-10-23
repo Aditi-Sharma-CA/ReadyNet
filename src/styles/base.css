@@ -196,3 +196,120 @@ a { color: var(--info); }
 .counter-minus { border: 2px solid var(--ink); background: var(--surface); color: var(--ink); }
 .counter-plus { border: 0; background: var(--ink); color: #FFFFFF; }
 .counter-value { font-size: 56px; font-weight: 700; min-width: 90px; text-align: center; }
+
+/* Plain button (Check in again) */
+.btn-plain { min-height: 52px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font-size: 17px; }
+
+/* Result screen banners */
+.banner { border-radius: 14px; padding: 12px 14px; font-size: 15px; font-weight: 700; line-height: 1.4; }
+.banner-sent { display: flex; gap: 10px; align-items: center; background: var(--risk-low-bg); color: var(--risk-low-fg); }
+.banner-rescue { background: var(--red); color: #FFFFFF; padding: 14px 16px; }
+
+/* Big triage status card. Each color sets its own background and text color. */
+.status-card { border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 6px; }
+.status-red { background: var(--red); color: #FFFFFF; }
+.status-yellow { background: var(--yellow); color: var(--ink); }
+.status-green { background: var(--green); color: #FFFFFF; }
+.status-white { background: var(--white-triage); color: var(--ink); border: 2px solid var(--ink); }
+.status-label { font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.status-name { margin: 0; font-size: 34px; font-weight: 700; }
+.status-name:focus { outline: none; }
+.status-meaning { font-size: 17px; line-height: 1.4; }
+
+/* Area risk tile */
+.risk { border-radius: 12px; padding: 12px; }
+.risk-high { background: var(--risk-high-bg); color: var(--risk-high-fg); }
+.risk-low { background: var(--risk-low-bg); color: var(--risk-low-fg); }
+.risk-label { font-size: 12px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; }
+.risk-value { font-size: 17px; font-weight: 700; }
+
+/* First-aid guides */
+.guides { display: flex; flex-direction: column; gap: 12px; }
+.guides-title { margin: 6px 0 0; font-size: 21px; font-weight: 700; }
+.guide {
+  background: var(--surface);
+  border: 2px solid;
+  border-radius: 16px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.guide-red { border-color: var(--red); --guide-badge: var(--red); }
+.guide-blue { border-color: var(--info); --guide-badge: var(--info); }
+.guide-gray { border-color: var(--line-strong); --guide-badge: var(--ink-3); }
+.guide-head { display: flex; align-items: center; gap: 10px; }
+.guide-tag {
+  flex: 0 0 auto;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 6px;
+  color: #FFFFFF;
+  background: var(--guide-badge);
+}
+.guide-title { margin: 0; font-size: 19px; font-weight: 700; }
+.guide-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.guide-step { display: flex; gap: 12px; align-items: flex-start; }
+.guide-num {
+  flex: 0 0 30px;
+  height: 30px;
+  border-radius: 15px;
+  background: var(--ink);
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.guide-step-title { font-size: 16px; font-weight: 700; }
+.guide-step-body { font-size: 15px; line-height: 1.45; color: var(--ink-2); }
+.guide-caution {
+  background: var(--caution-bg);
+  color: var(--caution-fg);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+/* Photos screen */
+.photo-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.photo-tile { width: 100%; height: 110px; object-fit: cover; border-radius: 12px; background: #C9D4DD; }
+.photo-add {
+  height: 110px;
+  border: 2px dashed #6B7C8A;
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+}
+.photo-add:focus-within { outline: 3px solid var(--info); outline-offset: 2px; }
+/* Hidden from view but still usable (the label opens it) */
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Done screen */
+.done-check {
+  width: 64px;
+  height: 64px;
+  border-radius: 32px;
+  background: var(--green);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.summary-row { display: flex; justify-content: space-between; gap: 10px; font-size: 15px; }
+.summary-label { color: var(--ink-3); }
+.summary-value { font-weight: 700; text-align: right; }

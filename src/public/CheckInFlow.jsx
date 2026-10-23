@@ -9,8 +9,15 @@ import AlertScreen from './AlertScreen.jsx';
 import LocationStep from './LocationStep.jsx';
 import QuestionStep from './QuestionStep.jsx';
 import CountStep from './CountStep.jsx';
+import ResultScreen from './ResultScreen.jsx';
+import PhotosStep from './PhotosStep.jsx';
+import DoneScreen from './DoneScreen.jsx';
 import { COUNTS } from '../data/questions.js';
 import { buildSteps, cleanAnswers, isQuestionStep, sectionCounter, progressPercent } from '../logic/flow.js';
+import { colorFromAnswers } from '../logic/triage.js';
+import { areaRisk, isTrapped } from '../logic/risk.js';
+import { guidesFor } from '../logic/firstAid.js';
+import { zoneForLocation } from '../logic/zone.js';
 
 const SAVE_KEY = 'readynet-checkin';
 
@@ -21,6 +28,7 @@ const START = {
   counts: { people: 1, hurt: 0, trappedN: 1 },
   address: '',
   location: null,                             // { lat, lng, accuracyM } from GPS
+  photoCount: 0,                              // photos sent (shown on the Done screen)
 };
 
 // Load a saved check-in from this phone, or start fresh.
@@ -36,6 +44,7 @@ function loadSaved() {
 export default function CheckInFlow() {
   const navigate = useNavigate();
   const [checkIn, setCheckIn] = useState(loadSaved);
+  const [photos, setPhotos] = useState([]); // photo previews; not saved to localStorage (too big)
   const { answers, counts } = checkIn;
 
   // Save after every change
@@ -51,6 +60,18 @@ export default function CheckInFlow() {
   const stepIndex = Math.min(checkIn.stepIndex, steps.length - 1);
   const step = steps[stepIndex];
   const forOther = answers.who === 1; // "Someone else"
+
+  // The result, worked out from the answers by the rules in src/logic/
+  const trapped = isTrapped(answers);
+  const color = colorFromAnswers(answers);
+  const result = {
+    color,
+    risk: areaRisk(answers),
+    trapped,
+    guides: guidesFor(answers, color),
+    peopleLine: `${counts.people} ${counts.people === 1 ? 'person' : 'people'}, ${counts.hurt} hurt` +
+      (trapped ? `, ${counts.trappedN} trapped` : ''),
+  };
 
   // When the screen changes: scroll to the top and move focus to the new heading
   // (so screen-reader users hear the new question).
@@ -84,8 +105,13 @@ export default function CheckInFlow() {
     });
   }
 
+  function sendPhotos() {
+    setCheckIn((prev) => ({ ...prev, photoCount: photos.length, stepIndex: stepIndex + 1 }));
+  }
+
   function restart() {
     setCheckIn(START);
+    setPhotos([]);
   }
 
   // Back is hidden on the Alert, Result and Done screens
@@ -132,14 +158,27 @@ export default function CheckInFlow() {
           />
         )}
 
-        {/* TEMPORARY: Result, Photos and Done screens are built in the next step */}
-        {['result', 'photos', 'done'].includes(step.type) && (
-          <>
-            <h1 className="title" tabIndex={-1}>{step.type} screen</h1>
-            <p className="hint">Coming in the next step.</p>
-            {step.type !== 'done' && <button className="btn btn-primary" onClick={next}>Continue</button>}
-            {step.type === 'done' && <button className="btn btn-outline" onClick={restart}>Check in again</button>}
-          </>
+        {step.type === 'result' && (
+          <ResultScreen result={result} forOther={forOther} trappedCount={counts.trappedN} onContinue={next} />
+        )}
+
+        {step.type === 'photos' && (
+          <PhotosStep
+            photos={photos}
+            onAddPhoto={(url) => setPhotos((prev) => [...prev, url])}
+            onContinue={sendPhotos}
+          />
+        )}
+
+        {step.type === 'done' && (
+          <DoneScreen
+            result={result}
+            forOther={forOther}
+            zone={checkIn.location ? zoneForLocation(checkIn.location.lat, checkIn.location.lng) : null}
+            photoCount={checkIn.photoCount}
+            onShowGuides={() => goTo(steps.findIndex((s) => s.type === 'result'))}
+            onRestart={restart}
+          />
         )}
       </main>
     </div>
