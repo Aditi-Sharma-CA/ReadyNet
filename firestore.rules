@@ -1,0 +1,32 @@
+// Who can read and write what in the database (HANDOVER.md section 6).
+// Residents: create their own check-ins and read only their own.
+// Responders (the one shared account): read and update everything.
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{db}/documents {
+    function signedIn() { return request.auth != null; }
+    function isResponder() {
+      return signedIn() && request.auth.token.email == 'responder@readynet-milpitas.app';
+    }
+    match /checkins/{id} {
+      allow create: if signedIn()
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.status == 'new';
+      allow read: if isResponder()
+        || (signedIn() && resource.data.ownerUid == request.auth.uid);
+      allow update: if isResponder()
+        || (signedIn() && resource.data.ownerUid == request.auth.uid
+            && request.resource.data.diff(resource.data).affectedKeys()
+               .hasOnly(['photoCount', 'updatedAt']));
+      allow delete: if false;
+      match /photos/{pid} {
+        allow create: if signedIn()
+          && get(/databases/$(db)/documents/checkins/$(id)).data.ownerUid == request.auth.uid;
+        allow read: if isResponder();
+      }
+    }
+    match /teams/{id} {
+      allow read, write: if isResponder();
+    }
+  }
+}

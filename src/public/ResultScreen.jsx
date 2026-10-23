@@ -4,16 +4,23 @@
 import { TRIAGE, RISK_LABEL } from '../data/results.js';
 import { GUIDE_INTRO, GUIDE_FOOTER } from '../data/firstAid.js';
 
-export default function ResultScreen({ result, forOther, trappedCount, onContinue }) {
+// sendStatus: 'sent' (server has it), 'saved' (waiting on the phone), 'failed' (never signed in)
+export default function ResultScreen({ result, forOther, trappedCount, sendStatus, onContinue }) {
   const triage = TRIAGE[result.color];
   const guideIntro = GUIDE_INTRO[result.color] || GUIDE_INTRO.other;
+  const bannerText = {
+    sent: 'Check-in sent to CERT and first responders',
+    saved: 'Saved — will send when you have signal',
+    failed: 'Not sent yet — this phone needs signal once to connect. Your answers are saved and will send automatically.',
+  }[sendStatus];
 
   return (
     <>
-      {/* Day 2: this banner will say "Saved — will send when you have signal" until Firebase confirms */}
-      <div className="banner banner-sent" role="status">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg>
-        <div>Check-in sent to CERT and first responders · {result.peopleLine}</div>
+      <div className={`banner banner-${sendStatus}`} role="status">
+        {sendStatus === 'sent' && (
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg>
+        )}
+        <div>{bannerText} · {result.peopleLine}</div>
       </div>
 
       {result.trapped && (

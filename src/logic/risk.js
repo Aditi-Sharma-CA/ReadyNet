@@ -12,3 +12,19 @@ export function areaRisk(answers) {
 export function isTrapped(answers) {
   return answers.trapped === YES;
 }
+
+// hazardsFrom: the list of hazard labels responders see as chips,
+// e.g. ["Fire, smoke or gas", "Collapsed building"].
+const HAZARD_LABELS = {
+  fire: 'Fire, smoke or gas',
+  collapse: 'Collapsed building',
+  flood: 'Flooding',
+  power: 'Power lines down or power out',
+  roads: 'Roads blocked',
+};
+
+export function hazardsFrom(answers) {
+  return Object.keys(HAZARD_LABELS)
+    .filter((id) => answers[id] === YES)
+    .map((id) => HAZARD_LABELS[id]);
+}

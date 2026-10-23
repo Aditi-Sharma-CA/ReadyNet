@@ -1,7 +1,7 @@
 // The resident check-in. This component keeps all the answers (the "state")
 // and shows one screen at a time. It saves progress to localStorage after
 // every change, so reloading the page picks up where the resident left off.
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 import ProgressBar from '../components/ProgressBar.jsx';
@@ -18,6 +18,9 @@ import { colorFromAnswers } from '../logic/triage.js';
 import { areaRisk, isTrapped } from '../logic/risk.js';
 import { guidesFor } from '../logic/firstAid.js';
 import { zoneForLocation } from '../logic/zone.js';
+import { buildCheckIn } from '../logic/checkin.js';
+import { sendCheckIn, whenSent } from './saveCheckIn.js';
+import { signInResident } from '../firebase.js';
 
 const SAVE_KEY = 'readynet-checkin';
 
@@ -29,6 +32,7 @@ const START = {
   address: '',
   location: null,                             // { lat, lng, accuracyM } from GPS
   photoCount: 0,                              // photos sent (shown on the Done screen)
+  checkinId: null,                            // database id, once the check-in is saved
 };
 
 // Load a saved check-in from this phone, or start fresh.
@@ -45,7 +49,16 @@ export default function CheckInFlow() {
   const navigate = useNavigate();
   const [checkIn, setCheckIn] = useState(loadSaved);
   const [photos, setPhotos] = useState([]); // photo previews; not saved to localStorage (too big)
+  // sendStatus: 'saved' (waiting on the phone), 'sent' (server has it), or 'failed' (never signed in)
+  const [sendStatus, setSendStatus] = useState('saved');
+  const [retry, setRetry] = useState(0);
+  const sending = useRef(false); // stops the check-in being sent twice
   const { answers, counts } = checkIn;
+
+  // Sign in anonymously as soon as the app opens, while there may still be signal.
+  useEffect(() => {
+    signInResident().catch(() => {}); // if it fails now, it's tried again when sending
+  }, []);
 
   // Save after every change
   useEffect(() => {
@@ -72,6 +85,32 @@ export default function CheckInFlow() {
     peopleLine: `${counts.people} ${counts.people === 1 ? 'person' : 'people'}, ${counts.hurt} hurt` +
       (trapped ? `, ${counts.trappedN} trapped` : ''),
   };
+
+  // SEND: when the resident reaches the Result screen, send the check-in once.
+  const finished = ['result', 'photos', 'done'].includes(step.type);
+  useEffect(() => {
+    if (!finished || checkIn.checkinId || sending.current) return;
+    sending.current = true;
+    sendCheckIn(buildCheckIn(checkIn, Date.now()))
+      .then((checkinId) => setCheckIn((prev) => ({ ...prev, checkinId })))
+      .catch(() => setSendStatus('failed')) // could not sign in (no signal, first time)
+      .finally(() => { sending.current = false; });
+  }, [finished, checkIn.checkinId, retry]); // re-check when one of these changes
+
+  // If sending failed, try again as soon as the phone is back online.
+  useEffect(() => {
+    if (sendStatus !== 'failed') return;
+    const tryAgain = () => { setSendStatus('saved'); setRetry((n) => n + 1); };
+    window.addEventListener('online', tryAgain);
+    return () => window.removeEventListener('online', tryAgain);
+  }, [sendStatus]);
+
+  // WATCH: show "Saved — will send..." until the server has it, then "sent".
+  useEffect(() => {
+    if (!checkIn.checkinId) return;
+    setSendStatus('saved');
+    return whenSent(() => setSendStatus('sent'));
+  }, [checkIn.checkinId]);
 
   // When the screen changes: scroll to the top and move focus to the new heading
   // (so screen-reader users hear the new question).
@@ -112,6 +151,7 @@ export default function CheckInFlow() {
   function restart() {
     setCheckIn(START);
     setPhotos([]);
+    setSendStatus('saved');
   }
 
   // Back is hidden on the Alert, Result and Done screens
@@ -159,7 +199,7 @@ export default function CheckInFlow() {
         )}
 
         {step.type === 'result' && (
-          <ResultScreen result={result} forOther={forOther} trappedCount={counts.trappedN} onContinue={next} />
+          <ResultScreen result={result} forOther={forOther} trappedCount={counts.trappedN} sendStatus={sendStatus} onContinue={next} />
         )}
 
         {step.type === 'photos' && (

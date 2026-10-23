@@ -26,9 +26,10 @@ a { color: var(--info); }
 
 /* Dark header bar with the ReadyNet logo */
 .header {
-  display: flex;
+  /* 3 columns: Back button | logo (always centered) | Online pill */
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   padding: 20px 20px 12px;
   background: var(--ink);
   color: #FFFFFF;
@@ -42,6 +43,22 @@ a { color: var(--info); }
   letter-spacing: 0.3px;
 }
 .header-side { width: 44px; height: 44px; }
+.header-right { justify-self: end; }
+
+/* Online / Offline pill in the header */
+.online-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  background: #22384A;
+  color: #FFFFFF;
+}
+.online-dot { width: 8px; height: 8px; border-radius: 4px; background: #6FCF73; }
+.online-pill-off .online-dot { background: #FF8A80; }
 .header-back {
   width: 44px;
   height: 44px;
@@ -201,8 +218,10 @@ a { color: var(--info); }
 .btn-plain { min-height: 52px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font-size: 17px; }
 
 /* Result screen banners */
-.banner { border-radius: 14px; padding: 12px 14px; font-size: 15px; font-weight: 700; line-height: 1.4; }
-.banner-sent { display: flex; gap: 10px; align-items: center; background: var(--risk-low-bg); color: var(--risk-low-fg); }
+.banner { display: flex; gap: 10px; align-items: center; border-radius: 14px; padding: 12px 14px; font-size: 15px; font-weight: 700; line-height: 1.4; }
+.banner-sent { background: var(--risk-low-bg); color: var(--risk-low-fg); }
+.banner-saved { background: var(--info-bg); color: var(--info); }   /* waiting for signal */
+.banner-failed { background: var(--risk-high-bg); color: var(--risk-high-fg); }
 .banner-rescue { background: var(--red); color: #FFFFFF; padding: 14px 16px; }
 
 /* Big triage status card. Each color sets its own background and text color. */
