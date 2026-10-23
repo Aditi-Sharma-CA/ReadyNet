@@ -20,6 +20,7 @@ import { guidesFor } from '../logic/firstAid.js';
 import { zoneForLocation } from '../logic/zone.js';
 import { buildCheckIn } from '../logic/checkin.js';
 import { sendCheckIn, whenSent } from './saveCheckIn.js';
+import { sendPhotos } from './photos.js';
 import { signInResident } from '../firebase.js';
 
 const SAVE_KEY = 'readynet-checkin';
@@ -144,8 +145,11 @@ export default function CheckInFlow() {
     });
   }
 
-  function sendPhotos() {
-    setCheckIn((prev) => ({ ...prev, photoCount: photos.length, stepIndex: stepIndex + 1 }));
+  function finishPhotos() {
+    // Photos can only be attached once the check-in has its database id
+    const sendable = checkIn.checkinId ? photos : [];
+    if (sendable.length > 0) sendPhotos(checkIn.checkinId, sendable);
+    setCheckIn((prev) => ({ ...prev, photoCount: sendable.length, stepIndex: stepIndex + 1 }));
   }
 
   function restart() {
@@ -205,8 +209,8 @@ export default function CheckInFlow() {
         {step.type === 'photos' && (
           <PhotosStep
             photos={photos}
-            onAddPhoto={(url) => setPhotos((prev) => [...prev, url])}
-            onContinue={sendPhotos}
+            onAddPhoto={(dataUrl) => setPhotos((prev) => [...prev, dataUrl])}
+            onContinue={finishPhotos}
           />
         )}
 
