@@ -4,11 +4,12 @@
 //   Resolved     = done (hidden until "Show resolved" is tapped)
 import { useState } from 'react';
 import CheckInCard from './CheckInCard.jsx';
+import DemoControls from './DemoControls.jsx';
 import { groupDuplicates, needsTeam, isOpen, byPriority } from '../logic/ranking.js';
 
-export default function DoNextTab({ checkins, zone, now, teams, allTeams, responderName }) {
+export default function DoNextTab({ checkins, zone, now, teams, allTeams, responderName, onOpenPhotos }) {
   // Passed to every card so its buttons can assign teams and record who did what
-  const cardProps = { now, teams, allTeams, checkins, responderName };
+  const cardProps = { now, teams, allTeams, checkins, responderName, onOpenPhotos };
   const [showResolved, setShowResolved] = useState(false);
 
   // Duplicate reports of the same emergency become one card
@@ -53,6 +54,9 @@ export default function DoNextTab({ checkins, zone, now, teams, allTeams, respon
       {showResolved && resolved.map((incident) => (
         <CheckInCard key={incident.id} incident={incident} variant="resolved" {...cardProps} />
       ))}
+
+      {/* Demo mode: only when VITE_DEMO=true is set in .env.local */}
+      {import.meta.env.VITE_DEMO === 'true' && <DemoControls />}
     </div>
   );
 }

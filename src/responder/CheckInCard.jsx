@@ -10,7 +10,7 @@ const COLOR_LABEL = { red: 'RED', yellow: 'YELLOW', green: 'GREEN', white: 'WHIT
 const STATUS_LABEL = { new: 'New', assigned: 'Assigned', reached: 'On scene', resolved: 'Resolved' };
 const HISTORY_LABEL = { new: 'New', assigned: 'Assigned', reached: 'Reached', resolved: 'Resolved' };
 
-export default function CheckInCard({ incident, rank, variant, now, teams, allTeams, checkins, responderName }) {
+export default function CheckInCard({ incident, rank, variant, now, teams, allTeams, checkins, responderName, onOpenPhotos }) {
   const [picking, setPicking] = useState(false); // showing the list of free teams?
 
   // The team on this incident, written as "Team 2 (3)" = name and size
@@ -98,7 +98,8 @@ export default function CheckInCard({ incident, rank, variant, now, teams, allTe
           Navigate
         </a>
         {variant === 'need' && (
-          <button className={incident.photoCount ? 'r-photos' : 'r-photos r-photos-none'} disabled={!incident.photoCount}>
+          <button className={incident.photoCount ? 'r-photos' : 'r-photos r-photos-none'} disabled={!incident.photoCount}
+            onClick={() => onOpenPhotos(incident)}>
             {incident.photoCount ? `Photos (${incident.photoCount})` : 'No photos'}
           </button>
         )}

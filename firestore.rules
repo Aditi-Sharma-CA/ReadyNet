@@ -18,11 +18,14 @@ service cloud.firestore {
         || (signedIn() && resource.data.ownerUid == request.auth.uid
             && request.resource.data.diff(resource.data).affectedKeys()
                .hasOnly(['photoCount', 'updatedAt']));
-      allow delete: if false;
+      // Only sample data (demo: true) can ever be deleted, and only by responders
+      allow delete: if isResponder() && resource.data.demo == true;
       match /photos/{pid} {
         allow create: if signedIn()
           && get(/databases/$(db)/documents/checkins/$(id)).data.ownerUid == request.auth.uid;
         allow read: if isResponder();
+        allow delete: if isResponder()
+          && get(/databases/$(db)/documents/checkins/$(id)).data.demo == true;
       }
     }
     match /teams/{id} {

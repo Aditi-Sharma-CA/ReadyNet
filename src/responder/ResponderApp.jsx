@@ -10,6 +10,7 @@ import { auth, db } from '../firebase.js';
 import AccessScreen from './AccessScreen.jsx';
 import DoNextTab from './DoNextTab.jsx';
 import TeamsTab from './TeamsTab.jsx';
+import PhotoViewer from './PhotoViewer.jsx';
 import TabBar from './TabBar.jsx';
 import { formatClock } from '../logic/time.js';
 
@@ -33,6 +34,7 @@ export default function ResponderApp() {
   const [tab, setTab] = useState('todo');
   const [zoneView, setZoneView] = useState('mine'); // 'mine' or 'all'
   const [now, setNow] = useState(Date.now());
+  const [viewing, setViewing] = useState(null); // incident whose photos are open
 
   const unlocked = user && user.email === RESPONDER_EMAIL;
 
@@ -108,7 +110,7 @@ export default function ResponderApp() {
 
             {tab === 'todo' && (
               <DoNextTab checkins={checkins} zone={zoneView === 'mine' ? prefs.zone : 'all'} now={now}
-                teams={teams} allTeams={allTeams} responderName={prefs.name} />
+                teams={teams} allTeams={allTeams} responderName={prefs.name} onOpenPhotos={setViewing} />
             )}
             {tab === 'map' && <p className="hint">Map coming on Day 4.</p>}
             {tab === 'teams' && (
@@ -119,6 +121,8 @@ export default function ResponderApp() {
           <TabBar tab={tab} onChange={setTab} />
         </>
       )}
+
+      {unlocked && viewing && <PhotoViewer incident={viewing} onClose={() => setViewing(null)} />}
     </div>
   );
 }
