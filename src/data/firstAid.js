@@ -31,9 +31,6 @@ export const GUIDES = {
       ['Hold it in place', 'Wrap a strip of blanket, a scarf or clothing tightly around the cloth so the pressure stays on.'],
     ],
   },
-  // Extra step + caution for an arm or leg that is spurting or won't stop
-  bleedingTieStep: ['Tie above the wound', 'Arm or leg still bleeding? Tie a belt or blanket strip tightly 2–3 inches above the wound, not on a joint. Twist it with a stick until the bleeding stops. Note the time and don’t loosen it.'],
-  bleedingTieCaution: 'Tell responders a band is tied and what time you tied it.',
   // Caution for head, neck or body wounds
   bleedingBodyCaution: 'Head, neck or body wound: keep firm pressure only. Never tie anything around the neck.',
 

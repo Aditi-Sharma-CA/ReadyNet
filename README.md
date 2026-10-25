@@ -48,7 +48,7 @@ ReadyNet flips this around: residents report from their phones, and volunteers g
 
 ### Demo script (for the video)
 1. *Phone A (resident):* the earthquake alert → check in for a neighbor → 2 people, 1 hurt → "Seriously" injured, heavy bleeding from the leg that won't stop → trapped: Yes, 1.
-2. *Result:* **Red**, "Rescue alert sent", **High risk**, and the first-aid steps, including "Tie above the wound".
+2. *Result:* **Red**, "Rescue alert sent", **High risk**, and the "Stop heavy bleeding" first-aid steps.
 3. *Phone B (responder):* the check-in appears at the **top of Do next within seconds**, with no refresh.
 4. Show the merged card, its photos, **Assign a team** → **Mark reached**, then the **Map** (tap a dot to jump to its card) and the **Teams** tab.
 5. *Offline:* turn on Airplane mode on Phone A, check in again ("Saved — will send when you have signal"), turn it off, and watch it arrive on Phone B.

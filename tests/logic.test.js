@@ -37,12 +37,13 @@ test('surroundings never change the color, only the area risk', () => {
   assert.equal(areaRisk({ ...NOT_HURT, trapped: 1, power: 0, roads: 0 }), 'low', 'power and roads only');
 });
 
-test('bleeding guide: tie above the wound only for an arm or leg', () => {
-  const arm = guidesFor({ ...NOT_HURT, breath: 1, bleedWhere: 0, bleedType: 0, bleedPress: 0 }, 'red');
+test('bleeding guide: firm pressure only, no tourniquet advice', () => {
+  const arm = guidesFor({ ...NOT_HURT, breath: 1, bleedWhere: 0, bleedType: 0, bleedPress: 1 }, 'red');
   const head = guidesFor({ ...NOT_HURT, breath: 1, bleedWhere: 1, bleedType: 0, bleedPress: 1 }, 'red');
-  const stepTitles = (guides) => guides.find((g) => g.title === 'Stop heavy bleeding').steps.map((s) => s[0]);
-  assert.ok(stepTitles(arm).includes('Tie above the wound'));
-  assert.ok(!stepTitles(head).includes('Tie above the wound'));
+  const bleeding = (guides) => guides.find((g) => g.title === 'Stop heavy bleeding');
+  assert.deepEqual(bleeding(arm).steps.map((s) => s[0]), ['Press hard', 'Add, don’t remove', 'Hold it in place']);
+  assert.ok(!JSON.stringify(arm).includes('Tie above'), 'no tourniquet step even when spurting and not slowing');
+  assert.ok(bleeding(head).caution.startsWith('Head, neck or body'), 'head/neck still warns: pressure only');
 });
 
 test('first-aid guides', () => {
