@@ -1,7 +1,7 @@
 // One check-in (or several merged reports) as a card in the responder list.
 // variant: 'need' (full card in Do next), 'progress' (In progress), 'resolved' (small).
 // The main button moves the incident along: Assign a team -> Mark reached -> Mark resolved.
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { minutesAgo, formatClock } from '../logic/time.js';
 import { teamStatus, NEXT_STEP } from '../logic/teams.js';
 import { changeStatus } from './actions.js';
@@ -10,8 +10,15 @@ const COLOR_LABEL = { red: 'RED', yellow: 'YELLOW', green: 'GREEN', white: 'WHIT
 const STATUS_LABEL = { new: 'New', assigned: 'Assigned', reached: 'On scene', resolved: 'Resolved' };
 const HISTORY_LABEL = { new: 'New', assigned: 'Assigned', reached: 'Reached', resolved: 'Resolved' };
 
-export default function CheckInCard({ incident, rank, variant, now, teams, allTeams, checkins, responderName, onOpenPhotos }) {
+export default function CheckInCard({ incident, rank, variant, now, teams, allTeams, checkins, responderName, onOpenPhotos, focusId }) {
   const [picking, setPicking] = useState(false); // showing the list of free teams?
+
+  // Opened from the map: scroll this card into view (it also gets an orange border)
+  const focused = focusId === incident.id;
+  const cardRef = useRef(null);
+  useEffect(() => {
+    if (focused && cardRef.current) cardRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, [focused]);
 
   // The team on this incident, written as "Team 2 (3)" = name and size
   const team = allTeams.find((t) => t.id === incident.teamId);
@@ -61,7 +68,7 @@ export default function CheckInCard({ incident, rank, variant, now, teams, allTe
   const zoneLabel = <span className="r-zone">{incident.zone ? `Zone ${incident.zone}` : 'Zone unknown'}</span>;
 
   return (
-    <div className={'r-card' + (stale ? ' r-card-stale' : '')}>
+    <div ref={cardRef} className={'r-card' + (stale ? ' r-card-stale' : '') + (focused ? ' r-card-focus' : '')}>
       <div className="r-card-top">
         {variant === 'need' && <span className="r-rank">{rank}</span>}
         {colorBadge}

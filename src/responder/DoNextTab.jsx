@@ -7,9 +7,9 @@ import CheckInCard from './CheckInCard.jsx';
 import DemoControls from './DemoControls.jsx';
 import { groupDuplicates, needsTeam, isOpen, byPriority } from '../logic/ranking.js';
 
-export default function DoNextTab({ checkins, zone, now, teams, allTeams, responderName, onOpenPhotos }) {
+export default function DoNextTab({ checkins, zone, now, teams, allTeams, responderName, onOpenPhotos, focusId }) {
   // Passed to every card so its buttons can assign teams and record who did what
-  const cardProps = { now, teams, allTeams, checkins, responderName, onOpenPhotos };
+  const cardProps = { now, teams, allTeams, checkins, responderName, onOpenPhotos, focusId };
   const [showResolved, setShowResolved] = useState(false);
 
   // Duplicate reports of the same emergency become one card

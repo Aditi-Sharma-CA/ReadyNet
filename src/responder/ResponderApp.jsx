@@ -11,6 +11,7 @@ import AccessScreen from './AccessScreen.jsx';
 import DoNextTab from './DoNextTab.jsx';
 import TeamsTab from './TeamsTab.jsx';
 import PhotoViewer from './PhotoViewer.jsx';
+import MapTab from './MapTab.jsx';
 import TabBar from './TabBar.jsx';
 import { formatClock } from '../logic/time.js';
 
@@ -35,6 +36,7 @@ export default function ResponderApp() {
   const [zoneView, setZoneView] = useState('mine'); // 'mine' or 'all'
   const [now, setNow] = useState(Date.now());
   const [viewing, setViewing] = useState(null); // incident whose photos are open
+  const [focusId, setFocusId] = useState(null); // card to highlight after tapping a map dot
 
   const unlocked = user && user.email === RESPONDER_EMAIL;
 
@@ -71,6 +73,13 @@ export default function ResponderApp() {
     const timer = setInterval(() => setNow(Date.now()), 30000);
     return () => clearInterval(timer);
   }, []);
+
+  // Tapping a dot on the map: open Do next and highlight that card
+  function pickFromMap(incident) {
+    if (zoneView === 'mine' && incident.zone != null && incident.zone !== prefs.zone) setZoneView('all');
+    setFocusId(incident.id);
+    setTab('todo');
+  }
 
   function savePrefs(newPrefs) {
     setPrefs(newPrefs);
@@ -110,9 +119,11 @@ export default function ResponderApp() {
 
             {tab === 'todo' && (
               <DoNextTab checkins={checkins} zone={zoneView === 'mine' ? prefs.zone : 'all'} now={now}
-                teams={teams} allTeams={allTeams} responderName={prefs.name} onOpenPhotos={setViewing} />
+                teams={teams} allTeams={allTeams} responderName={prefs.name} onOpenPhotos={setViewing} focusId={focusId} />
             )}
-            {tab === 'map' && <p className="hint">Map coming on Day 4.</p>}
+            {tab === 'map' && (
+              <MapTab checkins={checkins} zone={zoneView === 'mine' ? prefs.zone : 'all'} myZone={prefs.zone} onPick={pickFromMap} />
+            )}
             {tab === 'teams' && (
               <TeamsTab teams={teams} allTeams={allTeams} checkins={checkins} zone={prefs.zone}
                 responderName={prefs.name} now={now} />
