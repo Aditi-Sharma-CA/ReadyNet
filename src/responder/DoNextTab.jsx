@@ -4,12 +4,13 @@
 //   Resolved     = done (hidden until "Show resolved" is tapped)
 import { useState } from 'react';
 import CheckInCard from './CheckInCard.jsx';
-import { toIncident, needsTeam, isOpen, byPriority } from '../logic/ranking.js';
+import { groupDuplicates, needsTeam, isOpen, byPriority } from '../logic/ranking.js';
 
 export default function DoNextTab({ checkins, zone, now }) {
   const [showResolved, setShowResolved] = useState(false);
 
-  const incidents = checkins.map(toIncident);
+  // Duplicate reports of the same emergency become one card
+  const incidents = groupDuplicates(checkins);
 
   // Zone filter. Check-ins with no zone (no GPS) show in every zone, so none are missed.
   const visible = incidents.filter((i) => zone === 'all' || i.zone === zone || i.zone == null);
