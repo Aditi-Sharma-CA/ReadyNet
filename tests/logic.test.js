@@ -11,6 +11,7 @@ import { buildNote } from '../src/logic/note.js';
 import { buildCheckIn } from '../src/logic/checkin.js';
 import { zoneForLocation } from '../src/logic/zone.js';
 import { priority, byPriority, needsTeam, groupDuplicates, metersBetween } from '../src/logic/ranking.js';
+import { teamStatus, overdueMinutes, nextTeamName } from '../src/logic/teams.js';
 
 // Answers are option positions: 0 = first option. This person is not hurt at all.
 const NOT_HURT = { who: 0, injured: 3, walk: 0, breath: 2, water: 0, meds: 2 };
@@ -143,4 +144,18 @@ test('merging duplicate reports', () => {
 
   // Resolved check-ins are never merged
   assert.equal(groupDuplicates([report('i', { location: oak, status: 'resolved' }), report('j', { location: oak })]).length, 2);
+});
+
+test('teams: status, overdue warning and names', () => {
+  const MIN = 60000;
+  const team = { id: 't1', name: 'Team 1', members: ['Maria', 'Kevin', 'Priya'], lastUpdate: 0 };
+  assert.equal(teamStatus(team, []), 'Available');
+  assert.equal(teamStatus(team, [{ teamId: 't1', status: 'assigned' }]), 'Assigned');
+  assert.equal(teamStatus(team, [{ teamId: 't1', status: 'reached' }]), 'On scene');
+  assert.equal(teamStatus(team, [{ teamId: 't1', status: 'resolved' }]), 'Available', 'resolved frees the team');
+  assert.equal(overdueMinutes(team, [{ teamId: 't1', status: 'assigned' }], 34 * MIN), 34, 'warn after 30 min');
+  assert.equal(overdueMinutes(team, [{ teamId: 't1', status: 'assigned' }], 20 * MIN), null);
+  assert.equal(overdueMinutes(team, [], 90 * MIN), null, 'available teams never warn');
+  assert.equal(nextTeamName([]), 'Team 1');
+  assert.equal(nextTeamName([{ name: 'Team 1' }, { name: 'Team 4' }]), 'Team 5');
 });

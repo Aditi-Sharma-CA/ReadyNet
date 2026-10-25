@@ -177,3 +177,76 @@
 }
 .r-tab { height: 56px; border: 0; border-radius: 12px; font-size: 17px; font-weight: 700; background: transparent; color: #C9D4DD; }
 .r-tab-on { background: #FFFFFF; color: var(--ink); }
+
+/* Status buttons on cards */
+.r-action { height: 56px; border: 0; border-radius: 12px; font-size: 17px; font-weight: 700; color: #FFFFFF; }
+.r-action-new { background: var(--action); }
+.r-action-assigned { background: var(--ink); }
+.r-action-reached { background: var(--green); }
+.r-picker { display: flex; flex-direction: column; gap: 8px; background: #F4F6F8; border-radius: 12px; padding: 10px; }
+.r-picker-title { font-size: 15px; font-weight: 700; }
+.r-picker-none { font-size: 15px; color: #7A1712; font-weight: 700; }
+.r-team-choice {
+  min-height: 56px;
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  background: #FFFFFF;
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 14px;
+  text-align: left;
+}
+.r-team-choice-info { font-size: 15px; font-weight: 400; text-align: right; }
+
+/* Teams tab */
+.r-hint-flat { margin-top: 0; }
+.r-btn-action { min-height: 56px; border: 0; background: var(--action); color: #FFFFFF; font-size: 18px; }
+.r-team { gap: 6px; }
+.r-team-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.r-team-name { font-size: 19px; font-weight: 700; }
+.r-team-members { font-size: 16px; }
+.r-team-where { font-size: 16px; font-weight: 700; }
+.r-team-warning { font-size: 15px; font-weight: 700; color: #7A1712; }
+.r-team-available { background: #FDF3CF; color: #5C4500; }
+.r-team-assigned { background: var(--info-bg); color: #12355A; }
+.r-team-onscene { background: var(--risk-low-bg); color: var(--risk-low-fg); }
+.r-small-btn {
+  align-self: flex-start;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: #FFFFFF;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 700;
+  margin-top: 4px;
+}
+.r-make-team { gap: 10px; }
+.r-add-row { display: flex; gap: 8px; }
+.r-add-btn {
+  flex: 0 0 auto;
+  min-width: 80px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--ink);
+  color: #FFFFFF;
+  font-size: 17px;
+  font-weight: 700;
+}
+.r-add-btn:disabled { opacity: 0.45; }
+.r-member-chip {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 22px;
+  background: var(--info-bg);
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 700;
+}

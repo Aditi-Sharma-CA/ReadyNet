@@ -9,6 +9,7 @@ import { collection, onSnapshot } from 'firebase/firestore';
 import { auth, db } from '../firebase.js';
 import AccessScreen from './AccessScreen.jsx';
 import DoNextTab from './DoNextTab.jsx';
+import TeamsTab from './TeamsTab.jsx';
 import TabBar from './TabBar.jsx';
 import { formatClock } from '../logic/time.js';
 
@@ -28,6 +29,7 @@ export default function ResponderApp() {
   const [user, setUser] = useState(undefined); // undefined = still checking
   const [prefs, setPrefs] = useState(loadPrefs);
   const [checkins, setCheckins] = useState([]);
+  const [allTeams, setAllTeams] = useState([]); // includes disbanded teams (for history)
   const [tab, setTab] = useState('todo');
   const [zoneView, setZoneView] = useState('mine'); // 'mine' or 'all'
   const [now, setNow] = useState(Date.now());
@@ -46,6 +48,21 @@ export default function ResponderApp() {
       (error) => console.error('Could not load check-ins', error)
     );
   }, [unlocked]);
+
+  // Live list of teams too
+  useEffect(() => {
+    if (!unlocked) return;
+    return onSnapshot(
+      collection(db, 'teams'),
+      (snap) => setAllTeams(snap.docs.map((d) => ({ id: d.id, ...d.data() }))),
+      (error) => console.error('Could not load teams', error)
+    );
+  }, [unlocked]);
+
+  // Disbanded teams stay in the database but are hidden; sort Team 1, Team 2...
+  const teams = allTeams
+    .filter((t) => t.active)
+    .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
 
   // Tick every 30 seconds so "Updated 4 min ago" stays correct
   useEffect(() => {
@@ -90,10 +107,14 @@ export default function ResponderApp() {
             </div>
 
             {tab === 'todo' && (
-              <DoNextTab checkins={checkins} zone={zoneView === 'mine' ? prefs.zone : 'all'} now={now} />
+              <DoNextTab checkins={checkins} zone={zoneView === 'mine' ? prefs.zone : 'all'} now={now}
+                teams={teams} allTeams={allTeams} responderName={prefs.name} />
             )}
             {tab === 'map' && <p className="hint">Map coming on Day 4.</p>}
-            {tab === 'teams' && <p className="hint">Teams coming in step 8.</p>}
+            {tab === 'teams' && (
+              <TeamsTab teams={teams} allTeams={allTeams} checkins={checkins} zone={prefs.zone}
+                responderName={prefs.name} now={now} />
+            )}
           </main>
           <TabBar tab={tab} onChange={setTab} />
         </>

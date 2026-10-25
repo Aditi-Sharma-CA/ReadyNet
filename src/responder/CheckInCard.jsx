@@ -1,19 +1,29 @@
 // One check-in (or several merged reports) as a card in the responder list.
 // variant: 'need' (full card in Do next), 'progress' (In progress), 'resolved' (small).
+// The main button moves the incident along: Assign a team -> Mark reached -> Mark resolved.
+import { useState } from 'react';
 import { minutesAgo, formatClock } from '../logic/time.js';
+import { teamStatus, NEXT_STEP } from '../logic/teams.js';
+import { changeStatus } from './actions.js';
 
 const COLOR_LABEL = { red: 'RED', yellow: 'YELLOW', green: 'GREEN', white: 'WHITE' };
 const STATUS_LABEL = { new: 'New', assigned: 'Assigned', reached: 'On scene', resolved: 'Resolved' };
 const HISTORY_LABEL = { new: 'New', assigned: 'Assigned', reached: 'Reached', resolved: 'Resolved' };
 
-export default function CheckInCard({ incident, rank, variant, now }) {
+export default function CheckInCard({ incident, rank, variant, now, teams, allTeams, checkins, responderName }) {
+  const [picking, setPicking] = useState(false); // showing the list of free teams?
+
+  // The team on this incident, written as "Team 2 (3)" = name and size
+  const team = allTeams.find((t) => t.id === incident.teamId);
+  const teamLabel = incident.teamName ? `${incident.teamName}${team ? ` (${team.members.length})` : ''}` : '';
+
   const address = incident.address ||
     (incident.location ? `GPS ${incident.location.lat.toFixed(5)}, ${incident.location.lng.toFixed(5)}` : 'No address');
 
   // "New 2:18 PM → Assigned 2:30 PM · Team 2"
   const timeline = (incident.history || [])
     .map((h) => `${HISTORY_LABEL[h.status]} ${formatClock(h.at)}`)
-    .join('  →  ') + (incident.teamName ? `  ·  ${incident.teamName}` : '');
+    .join('  →  ') + (teamLabel ? `  ·  ${teamLabel}` : '');
 
   if (variant === 'resolved') {
     return (
@@ -39,6 +49,14 @@ export default function CheckInCard({ incident, rank, variant, now }) {
     : `${incident.address}, Milpitas, CA`;
   const navUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(query);
 
+  // What the main button does now (see NEXT_STEP in logic/teams.js)
+  const step = NEXT_STEP[incident.status];
+  const freeTeams = teams.filter((t) => teamStatus(t, checkins) === 'Available');
+  function moveAlong() {
+    // Mark reached / Mark resolved keep the same team
+    changeStatus(incident, step.next, team || (incident.teamId ? { id: incident.teamId, name: incident.teamName } : null), responderName);
+  }
+
   const colorBadge = <span className={`r-badge r-badge-${incident.color}`}>{COLOR_LABEL[incident.color]}</span>;
   const zoneLabel = <span className="r-zone">{incident.zone ? `Zone ${incident.zone}` : 'Zone unknown'}</span>;
 
@@ -57,7 +75,7 @@ export default function CheckInCard({ incident, rank, variant, now }) {
       </div>
 
       <div className={variant === 'need' ? 'r-address' : 'r-address r-address-small'}>{address}</div>
-      <div className="r-people">{peopleLine}{variant === 'progress' && incident.teamName ? ` · ${incident.teamName}` : ''}</div>
+      <div className="r-people">{peopleLine}{variant === 'progress' && teamLabel ? ` · ${teamLabel}` : ''}</div>
 
       {variant === 'need' && incident.reports > 1 && (
         <div className="r-merged">
@@ -84,7 +102,31 @@ export default function CheckInCard({ incident, rank, variant, now }) {
             {incident.photoCount ? `Photos (${incident.photoCount})` : 'No photos'}
           </button>
         )}
+        {variant === 'progress' && (
+          <button className={`r-action r-action-${incident.status}`} onClick={moveAlong}>{step.label}</button>
+        )}
       </div>
+
+      {variant === 'need' && (
+        <button className="r-action r-action-new" onClick={() => setPicking(!picking)}>
+          {picking ? 'Cancel' : step.label}
+        </button>
+      )}
+
+      {picking && (
+        <div className="r-picker">
+          <div className="r-picker-title">Pick an available team</div>
+          {freeTeams.map((t) => (
+            <button key={t.id} className="r-team-choice" onClick={() => { changeStatus(incident, 'assigned', t, responderName); setPicking(false); }}>
+              <span>{t.name}</span>
+              <span className="r-team-choice-info">{t.members.length} people · at {t.cache}</span>
+            </button>
+          ))}
+          {freeTeams.length === 0 && (
+            <div className="r-picker-none">No teams free. Finish or reassign a team first.</div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

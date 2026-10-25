@@ -6,7 +6,9 @@ import { useState } from 'react';
 import CheckInCard from './CheckInCard.jsx';
 import { groupDuplicates, needsTeam, isOpen, byPriority } from '../logic/ranking.js';
 
-export default function DoNextTab({ checkins, zone, now }) {
+export default function DoNextTab({ checkins, zone, now, teams, allTeams, responderName }) {
+  // Passed to every card so its buttons can assign teams and record who did what
+  const cardProps = { now, teams, allTeams, checkins, responderName };
   const [showResolved, setShowResolved] = useState(false);
 
   // Duplicate reports of the same emergency become one card
@@ -34,7 +36,7 @@ export default function DoNextTab({ checkins, zone, now }) {
       <h2 className="r-section">Do next</h2>
       <div className="r-section-hint">Red and trapped first, then where the most people are hurt.</div>
       {needList.map((incident, index) => (
-        <CheckInCard key={incident.id} incident={incident} rank={index + 1} variant="need" now={now} />
+        <CheckInCard key={incident.id} incident={incident} rank={index + 1} variant="need" {...cardProps} />
       ))}
       {needList.length === 0 && (
         <div className="r-empty">Every check-in here has a team. Check In progress below.</div>
@@ -42,14 +44,14 @@ export default function DoNextTab({ checkins, zone, now }) {
 
       <h2 className="r-section">In progress</h2>
       {inProgress.map((incident) => (
-        <CheckInCard key={incident.id} incident={incident} variant="progress" now={now} />
+        <CheckInCard key={incident.id} incident={incident} variant="progress" {...cardProps} />
       ))}
 
       <button className="btn r-btn-light" onClick={() => setShowResolved(!showResolved)}>
         {showResolved ? 'Hide resolved' : 'Show resolved'} ({resolved.length})
       </button>
       {showResolved && resolved.map((incident) => (
-        <CheckInCard key={incident.id} incident={incident} variant="resolved" now={now} />
+        <CheckInCard key={incident.id} incident={incident} variant="resolved" {...cardProps} />
       ))}
     </div>
   );
